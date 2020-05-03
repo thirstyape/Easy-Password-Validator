@@ -22,5 +22,17 @@
         {
             return false;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="password"></param>
+        public (int, bool) AnalysePassword(string password)
+        {
+            var score = CheckScore(password);
+            var pass = TestPassword(password);
+
+            return (score, pass);
+        }
     }
 }
