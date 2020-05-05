@@ -1,17 +1,22 @@
-﻿namespace Easy_Password_Validator
+﻿using Easy_Password_Validator.Interfaces;
+
+namespace Easy_Password_Validator
 {
     /// <summary>
     /// 
     /// </summary>
     public class PasswordValidatorService
     {
+        public int Score { get; set; }
+        public IPasswordRequirements Settings { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="password"></param>
         public int CheckScore(string password)
         {
-            return 0;
+            return Score;
         }
 
         /// <summary>

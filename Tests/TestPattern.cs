@@ -10,13 +10,9 @@ namespace Easy_Password_Validator.Tests
     /// </summary>
     public class TestPattern : IPasswordTest
     {
-        private readonly PatternMapService MapService;
-
         public TestPattern(IPasswordRequirements passwordRequirements)
         {
             Settings = passwordRequirements;
-
-            MapService = new PatternMapService();
         }
 
         public int ScoreModifier { get; set; }
@@ -31,7 +27,7 @@ namespace Easy_Password_Validator.Tests
                 return true;
 
             // Do work
-            var patterns = MapService.GetPatterns(password);
+            var patterns = PatternMapService.GetPatterns(password);
 
             // Adjust score
             if (isL33t == false)
