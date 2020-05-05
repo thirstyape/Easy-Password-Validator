@@ -8,9 +8,14 @@ namespace Easy_Password_Validator.Interfaces
     public interface IPasswordTest
     {
         /// <summary>
-        /// Provided the amount the password score should be changed by after running the test
+        /// The amount the password score should be changed by after running the test
         /// </summary>
         public int ScoreModifier { get; set; }
+
+        /// <summary>
+        /// A message to display to the end user on test failure
+        /// </summary>
+        public string FailureMessage { get; set; }
 
         /// <summary>
         /// Container to pass validator configuration to tester
@@ -23,10 +28,10 @@ namespace Easy_Password_Validator.Interfaces
         public IEnumerable<string> BadList { get; set; }
 
         /// <summary>
-        /// Executes the test on the provided password
+        /// Executes the test on the provided password and updates the score modifier
         /// </summary>
         /// <param name="password">The password to run the test on</param>
-        /// <param name="isL33t">Specifies whether this password is a l33t variant</param>
-        public bool RunTest(string password, bool isL33t);
+        /// <param name="isL33t">Specifies whether this password is a l33t variant (scoring does not occur)</param>
+        public bool TestAndScore(string password, bool isL33t);
     }
 }

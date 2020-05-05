@@ -18,7 +18,7 @@
         /// <summary>
         /// Specifies the maximum amount of times a single character may appear beside itself in a password
         /// </summary>
-        public int MaxConsecutiveSameCharacter { get; set; }
+        public int MaxRepeatSameCharacter { get; set; }
 
         /// <summary>
         /// Specifies the maximum amount of characters neighboring one another on the keyboard that may appear in a password

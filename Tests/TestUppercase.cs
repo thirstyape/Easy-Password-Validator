@@ -10,15 +10,32 @@ namespace Easy_Password_Validator.Tests
     /// </summary>
     public class TestUppercase : IPasswordTest
     {
+        public TestUppercase(IPasswordRequirements passwordRequirements)
+        {
+            Settings = passwordRequirements;
+        }
+
         public int ScoreModifier { get; set; }
+        public string FailureMessage { get; set; }
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool RunTest(string password, bool isL33t)
+        public bool TestAndScore(string password, bool isL33t)
         {
+            // Check for uppercase
             var uppercases = password.Count(char.IsUpper);
 
-            return uppercases > 0;
+            // Adjust score
+            if (isL33t == false)
+                ScoreModifier = uppercases * 2;
+
+            // Return result
+            var pass = Settings.RequireUppercase == false || uppercases > 0;
+
+            if (pass == false)
+                FailureMessage = "Must have at least one uppercase letter in password";
+
+            return pass;
         }
     }
 }

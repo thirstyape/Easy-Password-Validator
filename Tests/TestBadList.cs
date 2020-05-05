@@ -1,6 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,12 +16,19 @@ namespace Easy_Password_Validator.Tests
         }
 
         public int ScoreModifier { get; set; }
+        public string FailureMessage { get; set; }
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool RunTest(string password, bool isL33t)
+        public bool TestAndScore(string password, bool isL33t)
         {
-            return BadList.Contains(password);
+            // Return result
+            var pass = BadList.Any(x => x == password || x.Contains(password)) == false;
+
+            if (pass == false)
+                FailureMessage = "Specified password is in list of known bad passwords";
+
+            return pass;
         }
     }
 }

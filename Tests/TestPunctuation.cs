@@ -10,15 +10,32 @@ namespace Easy_Password_Validator.Tests
     /// </summary>
     public class TestPunctuation : IPasswordTest
     {
+        public TestPunctuation(IPasswordRequirements passwordRequirements)
+        {
+            Settings = passwordRequirements;
+        }
+
         public int ScoreModifier { get; set; }
+        public string FailureMessage { get; set; }
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool RunTest(string password, bool isL33t)
+        public bool TestAndScore(string password, bool isL33t)
         {
+            // Check for punctuation
             var punctuations = password.Count(char.IsPunctuation);
 
-            return punctuations > 0;
+            // Adjust score
+            if (isL33t == false)
+                ScoreModifier = punctuations * 2;
+
+            // Return result
+            var pass = Settings.RequirePunctuation == false || punctuations > 0;
+
+            if (pass == false)
+                FailureMessage = "Must have at least one punctuation mark in password";
+
+            return pass;
         }
     }
 }

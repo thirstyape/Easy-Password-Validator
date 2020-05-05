@@ -9,7 +9,7 @@ namespace Easy_Password_Validator.Models
     {
         public int MinLength { get; set; } = 6;
         public int MinUniqueCharacters { get; set; }
-        public int MaxConsecutiveSameCharacter { get; set; }
+        public int MaxRepeatSameCharacter { get; set; }
         public int MaxNeighboringCharacter { get; set; }
         public bool RequireDigit { get; set; } = true;
         public bool RequireLowercase { get; set; }
