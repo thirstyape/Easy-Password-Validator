@@ -107,9 +107,9 @@ namespace Easy_Password_Validator
         }
 
         /// <summary>
-        /// The default keyboard pattern map
+        /// The default Qwerty keyboard pattern map
         /// </summary>
-        private static readonly List<PatternMapItem> QwertyMap = new List<PatternMapItem>()
+        public static readonly List<PatternMapItem> QwertyMap = new List<PatternMapItem>()
         {
             new PatternMapItem() { RegularKey = '`', ShiftKey = '~', NeighborKeys = new char[] { '1', '!' } },
             new PatternMapItem() { RegularKey = '1', ShiftKey = '!', NeighborKeys = new char[] { '`', '2', 'q', '~', '@', 'Q' } },

@@ -44,5 +44,15 @@
         /// Specifies whether a password must contain at least one punctuation mark
         /// </summary>
         public bool RequirePunctuation { get; set; }
+
+        /// <summary>
+        /// Specifies the minimum total score required for a password to be considered valid
+        /// </summary>
+        public int MinScore { get; set; }
+
+        /// <summary>
+        /// Specifies whether to stop execution on the first failure or continue and report after all tests complete
+        /// </summary>
+        public bool ExitOnFailure { get; set; }
     }
 }

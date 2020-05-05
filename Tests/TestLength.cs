@@ -21,6 +21,9 @@ namespace Easy_Password_Validator.Tests
 
         public bool TestAndScore(string password, bool isL33t)
         {
+            // Reset
+            ScoreModifier = 0;
+
             // Adjust score
             if (isL33t == false)
                 ScoreModifier = password.Length * 3;

@@ -22,6 +22,9 @@ namespace Easy_Password_Validator.Tests
 
         public bool TestAndScore(string password, bool isL33t)
         {
+            // Reset
+            ScoreModifier = 0;
+
             // Count unique chars
             var unique = password.GroupBy(x => x).Count();
 

@@ -15,5 +15,7 @@ namespace Easy_Password_Validator.Models
         public bool RequireLowercase { get; set; }
         public bool RequireUppercase { get; set; }
         public bool RequirePunctuation { get; set; }
+        public int MinScore { get; set; }
+        public bool ExitOnFailure { get; set; }
     }
 }
