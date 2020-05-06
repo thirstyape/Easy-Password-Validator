@@ -12,18 +12,113 @@ To use this library either clone a copy of the repository or check out the NuGet
 
 ### Usage
 
-There are two main usage methods for this library: score checking and validation testing. The score checking methods will run tests on the provided password and return its total score. The validation testing methods will run tests on the provided password and return whether it passed or failed the tests.
+There are two parts to this library: score checking and validation testing. Testing a password will perform both actions. The score checking will provide an overall score to a password which is the sum of all test scores. The validation testing will return whether a password passed or failed the tests.
 
-**Score Checking**
+**Basic Example**
 
-```
-PasswordValidatorService.CheckScore("");
-```
-
-**Validation Testing**
+The following example provides a complete use case. This example makes use of the most basic configuration.
 
 ```
-PasswordValidatorService.TestPassword("");
+Console.WriteLine("Enter a username:");
+var username = Console.ReadLine();
+
+Console.WriteLine("Enter a password to test:");
+var password = Console.ReadLine();
+
+var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
+
+var pass = passwordValidator.TestAndScore(password, new string[] { username });
+
+if (pass)
+    Console.WriteLine($"Password passed validation with score: {passwordValidator.Score}");
+else
+    Console.WriteLine($"Password failed validation with score: {passwordValidator.Score}");
+
+if (pass == false)
+    foreach (var message in passwordValidator.FailureMessages)
+        Console.WriteLine(message);
+```
+
+**Using custom configuration**
+
+In the previous example, the call to ```new PasswordRequirements()``` was done inline in the service setup. However, it can be prepared beforehand and the validator will use different settings or you can create your own using ```IPasswordRequirements```.
+
+```
+var requirements = new PasswordRequirements()
+{
+    MinLength = 4,
+    ExitOnFailure = true,
+    RequireDigit = true,
+    MinScore = 50
+};
+
+var passwordValidator = new PasswordValidatorService(requirements);
+```
+
+**Adding A Custom Tester**
+
+The system also supports adding your own password tests that will run with the built-in ones. This is done by using ```IPasswordTest```.
+
+The sample tester class.
+
+```
+private class TestWhiteSpace : IPasswordTest
+{
+    public int ScoreModifier { get; set; }
+    public string FailureMessage { get; set; }
+    public IPasswordRequirements Settings { get; set; }
+    public IEnumerable<string> BadList { get; set; }
+
+    public bool TestAndScore(string password)
+    {
+        // Reset
+        FailureMessage = null;
+        ScoreModifier = 0;
+
+        // Check for digits
+        var whitespace = password.Count(char.IsWhiteSpace);
+
+        // Adjust score
+        ScoreModifier = whitespace * 2;
+
+        // Return result
+        var pass = whitespace > 0;
+
+        if (pass == false)
+            FailureMessage = "Must have at least one space in password";
+
+        return pass;
+    }
+}
+```
+
+Adding to validator service.
+
+```
+var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
+
+passwordValidator.AddTest(new TestWhiteSpace());
+```
+
+**Adding A Custom Pattern**
+
+The pattern matcher checks for Qwerty keyboard patterns by default. You may add another instance of the pattern matcher with your own custom patterns (for example alphabetical order checking).
+
+```
+var requirements = new PasswordRequirements();
+var passwordValidator = new PasswordValidatorService(requirements);
+
+var pattern = new List<PatternMapItem>()
+{
+    new PatternMapItem() { RegularKey = 'a', ShiftKey = 'A', NeighborKeys = new char[] { 'b', 'B' } },
+    new PatternMapItem() { RegularKey = 'b', ShiftKey = 'B', NeighborKeys = new char[] { 'a', 'A', 'c', 'C' } },
+    new PatternMapItem() { RegularKey = 'c', ShiftKey = 'C', NeighborKeys = new char[] { 'b', 'B', 'd', 'D' } },
+    new PatternMapItem() { RegularKey = 'd', ShiftKey = 'D', NeighborKeys = new char[] { 'c', 'C', 'e', 'E' } } // And so on
+};
+
+var test = new TestPattern(requirements, pattern);
+
+passwordValidator.AddTest(test);
 ```
 
 ## Authors
