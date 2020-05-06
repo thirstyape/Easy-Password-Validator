@@ -1,5 +1,6 @@
 ﻿using Easy_Password_Validator.Enums;
 using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Models;
 using Easy_Password_Validator.Tests;
 
 using System;
@@ -19,6 +20,8 @@ namespace Easy_Password_Validator
         private readonly List<IPasswordTest> PasswordTests;
         private readonly TestBadList Top10kBadList;
         private readonly TestBadList Top100kBadList;
+
+        private IEnumerable<L33tReplacement> CustomReplacements;
 
         /// <summary>
         /// Prepares the validator service for use analysing passwords
@@ -55,7 +58,7 @@ namespace Easy_Password_Validator
         /// <summary>
         /// The configuration settings to use when analysing passwords
         /// </summary>
-        public IPasswordRequirements Settings { get; set; }
+        public IPasswordRequirements Settings { get; private set; }
 
         /// <summary>
         /// Contains a listing of any reasons a password failed analysis
@@ -79,7 +82,12 @@ namespace Easy_Password_Validator
             Score = 0;
 
             // Get l33t variants
-            var l33t = L33tDecoderService.Decode(password, L33tLevel.Advanced);
+            IEnumerable<string> l33t;
+
+            if (CustomReplacements == null)
+                l33t = L33tDecoderService.Decode(password, L33tLevel.Advanced);
+            else
+                l33t = L33tDecoderService.Decode(password, L33tLevel.Custom, CustomReplacements);
 
             // Run general tests
             RunPasswordTests(password);
@@ -113,6 +121,15 @@ namespace Easy_Password_Validator
         public void AddTest(IPasswordTest test)
         {
             PasswordTests.Add(test);
+        }
+
+        /// <summary>
+        /// Updates the collection of l33t replacements that will be used to decode l33t based passwords
+        /// </summary>
+        /// <param name="l33TReplacements">The replacements to use</param>
+        public void UpdateL33tReplacements(IEnumerable<L33tReplacement> l33TReplacements)
+        {
+            CustomReplacements = l33TReplacements;
         }
 
         /// <summary>
