@@ -19,14 +19,14 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = password.Length * 3;
+            ScoreModifier = password.Length * 5;
 
             // Return result
             var pass = password.Length >= Settings.MinLength;

@@ -4,7 +4,10 @@ using Easy_Password_Validator.Tests;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Easy_Password_Validator
 {
@@ -14,7 +17,8 @@ namespace Easy_Password_Validator
     public class PasswordValidatorService
     {
         private readonly List<IPasswordTest> PasswordTests;
-        private readonly List<TestBadList> BadListTests;
+        private readonly TestBadList Top10kBadList;
+        private readonly TestBadList Top100kBadList;
 
         /// <summary>
         /// Prepares the validator service for use analysing passwords
@@ -37,11 +41,10 @@ namespace Easy_Password_Validator
                 new TestPunctuation(passwordRequirements)
             };
 
-            BadListTests = new List<TestBadList>
-            {
-                new TestBadList("/xato-10k"),
-                new TestBadList("/xato-100k")
-            };
+            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            Top10kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-10k-passwords.txt"));
+            Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
         }
 
         /// <summary>
@@ -72,24 +75,26 @@ namespace Easy_Password_Validator
                 throw new ArgumentNullException(nameof(password), "Must provide password to analyse");
 
             // Reset
-            Score = 0;
             FailureMessages.Clear();
+            Score = 0;
 
             // Get l33t variants
-            var l33t = L33tDecoderService.Decode(password, L33tLevel.Basic);
+            var l33t = L33tDecoderService.Decode(password, L33tLevel.Advanced);
 
             // Run general tests
-            RunPasswordTests(password, false);
+            RunPasswordTests(password);
+
+            // Run list tests
+            TestBadList userBadList = null;
+
+            if (userInformation != null)
+                userBadList = new TestBadList(userInformation);
+
+            RunBadListTests(password, false, userBadList);
 
             foreach (var variant in l33t)
                 if (Settings.ExitOnFailure == false || FailureMessages.Count == 0)
-                    RunPasswordTests(variant, true);
-
-            // Run list tests
-            if (userInformation != null)
-                BadListTests.Add(new TestBadList(userInformation));
-
-            // NOTE: this is where you check password and l33t, and reversed password and reversed l33t
+                    RunBadListTests(variant, true, userBadList);
 
             // Remove duplicate failure messages (l33t variants may cause this)
             FailureMessages = FailureMessages.Distinct().ToList();
@@ -107,31 +112,92 @@ namespace Easy_Password_Validator
         /// <param name="test">The test to add</param>
         public void AddTest(IPasswordTest test)
         {
-            if (test is TestBadList testBadList)
-                BadListTests.Add(testBadList);
-            else
-                PasswordTests.Add(test);
+            PasswordTests.Add(test);
         }
 
         /// <summary>
         /// Runs each loaded password test against the provided password
         /// </summary>
         /// <param name="password">The password to test</param>
-        /// <param name="isL33t">Specifies whether this password is a l33t variant (scoring does not occur)</param>
-        private void RunPasswordTests(string password, bool isL33t)
+        private void RunPasswordTests(string password)
         {
             foreach (var test in PasswordTests)
             {
-                var pass = test.TestAndScore(password, isL33t);
-
-                if (pass == false)
-                    FailureMessages.Add(test.FailureMessage);
+                var pass = RunTest(password, test);
 
                 if (pass == false && Settings.ExitOnFailure)
                     break;
-
-                Score += test.ScoreModifier;
             }
+        }
+
+        /// <summary>
+        /// Runs each applicable bad list test against the provided password
+        /// </summary>
+        /// <param name="password">The password to test</param>
+        /// <param name="isL33t">Specifies whether this password is a l33t variant</param>
+        /// <param name="userBadList">An optional bad list to check against containing user information</param>
+        private void RunBadListTests(string password, bool isL33t, TestBadList userBadList = null)
+        {
+            var reversed = Reverse(password);
+
+            // Test top 10K list
+            if (isL33t)
+            {
+                RunTest(password, Top10kBadList);
+                RunTest(reversed, Top10kBadList);
+            }
+
+            // Test top 100K list
+            if (isL33t == false)
+            {
+                RunTest(password, Top100kBadList);
+                RunTest(reversed, Top100kBadList);
+            }
+
+            // Test user list
+            if (userBadList != null)
+            {
+                RunTest(password, userBadList);
+                RunTest(reversed, userBadList);
+            }
+        }
+
+        /// <summary>
+        /// Runs a single test on a password and updates the failure message and score
+        /// </summary>
+        /// <param name="password">The password to test</param>
+        /// <param name="test">The test to run on the password</param>
+        private bool RunTest(string password, IPasswordTest test)
+        {
+            var pass = test.TestAndScore(password);
+
+            if (pass == false)
+                FailureMessages.Add(test.FailureMessage);
+
+            Score += test.ScoreModifier;
+
+            return pass;
+        }
+
+        /// <summary>
+        /// Separates a string into its grapheme clusters (or characters)
+        /// </summary>
+        /// <param name="value">The value to separate</param>
+        private IEnumerable<string> GetGraphemeClusters(string value)
+        {
+            var enumerator = StringInfo.GetTextElementEnumerator(value);
+
+            while (enumerator.MoveNext())
+                yield return (string)enumerator.Current;
+        }
+
+        /// <summary>
+        /// Reverses the provided string
+        /// </summary>
+        /// <param name="value">The value to reverse</param>
+        private string Reverse(string value)
+        {
+            return string.Join(string.Empty, GetGraphemeClusters(value).Reverse().ToArray());
         }
     }
 }

@@ -39,10 +39,20 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
+            // Reset
+            FailureMessage = null;
+            ScoreModifier = 0;
+
+            // Check for match
+            var match = BadList.Any(x => x.Contains(password, StringComparison.OrdinalIgnoreCase));
+
+            // Adjust score
+            ScoreModifier = match ? -50 : 0;
+
             // Return result
-            var pass = BadList.Any(x => x == password || x.Contains(password)) == false;
+            var pass = match == false;
 
             if (pass == false)
                 FailureMessage = "Specified password is in list of known bad passwords";

@@ -70,10 +70,30 @@ namespace Easy_Password_Validator
         /// <param name="map">A custom map to use</param>
         public static IEnumerable<string> GetPatterns(string test, List<PatternMapItem> map)
         {
-            return test.Select((c, i) => test.Substring(i)
-                .TakeWhile(x => IsNeighbor(c, x, map))
-                .ToString()
-            );
+            var patterns = new List<string>();
+            var current = string.Empty;
+
+            for (var i = 0; i < test.Length - 1; i++)
+            {
+                var pass = IsNeighbor(test[i], test[i + 1], map);
+
+                if (pass && current.Length == 0)
+                    current = test[i].ToString();
+
+                if (pass)
+                    current += test[i + 1];
+
+                if (pass == false && current.Length > 1)
+                    patterns.Add(current);
+
+                if (pass == false)
+                    current = string.Empty;
+            }
+
+            if (current.Length > 1)
+                patterns.Add(current);
+
+            return patterns;
         }
 
         /// <summary>

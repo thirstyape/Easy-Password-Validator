@@ -38,4 +38,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 * Parts of this library have been inspired by [zxcvbn](https://github.com/dropbox/zxcvbn)
 * Other parts have been inspired by [The Password Meter](http://www.passwordmeter.com)
-* Thank you to Daniel Miessler for the [SecLists](https://github.com/danielmiessler/SecLists/tree/master/Passwords) project
+* Thank you to Daniel Miessler for the [SecLists](https://github.com/danielmiessler/SecLists) project

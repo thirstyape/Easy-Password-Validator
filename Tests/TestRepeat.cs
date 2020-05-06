@@ -1,5 +1,6 @@
 ﻿using Easy_Password_Validator.Interfaces;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,9 +21,10 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Check for inactive
@@ -30,14 +32,34 @@ namespace Easy_Password_Validator.Tests
                 return true;
 
             // Group consecutive letters
-            var repeats = password.Select((c, i) => password.Substring(i).TakeWhile(x => x == c));
+            var repeats = new List<string>();
+            var current = string.Empty;
+
+            for (var i = 0; i < password.Length - 1; i++)
+            {
+                var same = password[i] == password[i + 1];
+
+                if (same && current.Length == 0)
+                    current = password[i].ToString();
+
+                if (same)
+                    current += password[i + 1];
+
+                if (same == false && current.Length > 1)
+                    repeats.Add(current);
+
+                if (same == false)
+                    current = string.Empty;
+            }
+
+            if (current.Length > 1)
+                repeats.Add(current);
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = repeats.Count(x => x.Count() > Settings.MaxRepeatSameCharacter) * -3;
+            ScoreModifier = repeats.Sum(x => -(int)Math.Pow(2, x.Length));
 
             // Return result
-            var pass = repeats.Any(x => x.Count() > Settings.MaxRepeatSameCharacter) == false;
+            var pass = repeats.Any(x => x.Length > Settings.MaxRepeatSameCharacter) == false;
 
             if (pass == false)
                 FailureMessage = $"Can have a maximum of {Settings.MaxRepeatSameCharacter} adjacent repeat characters";

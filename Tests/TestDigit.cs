@@ -20,17 +20,17 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
-            
+
             // Check for digits
             var digits = password.Count(char.IsDigit);
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = digits * 2;
+            ScoreModifier = digits * 3;
 
             // Return result
             var pass = Settings.RequireDigit == false || digits > 0;

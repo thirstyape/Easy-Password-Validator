@@ -158,7 +158,7 @@ namespace Easy_Password_Validator
                 .ToList();
 
             var multiples = replacementsList
-                .GroupBy(x => x.PlainText)
+                .GroupBy(x => x.L33tEncoded)
                 .Where(x => x.Count() > 1)
                 .SelectMany(x => x)
                 .ToList();
@@ -182,7 +182,7 @@ namespace Easy_Password_Validator
                 result.Add(current);
             }
 
-            return result.Distinct();
+            return result.Distinct().Where(x => x != l33t);
         }
     }
 }

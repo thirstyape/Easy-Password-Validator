@@ -20,17 +20,17 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Count unique chars
             var unique = password.GroupBy(x => x).Count();
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = unique * 2;
+            ScoreModifier = unique * 4;
 
             // Return result
             var pass = unique >= Settings.MinUniqueCharacters;

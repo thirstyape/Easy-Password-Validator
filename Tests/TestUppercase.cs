@@ -20,17 +20,17 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Check for uppercase
             var uppercases = password.Count(char.IsUpper);
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = uppercases * 2;
+            ScoreModifier = uppercases;
 
             // Return result
             var pass = Settings.RequireUppercase == false || uppercases > 0;

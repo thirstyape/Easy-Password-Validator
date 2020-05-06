@@ -1,6 +1,7 @@
 ﻿using Easy_Password_Validator.Interfaces;
 using Easy_Password_Validator.Models;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,9 +25,10 @@ namespace Easy_Password_Validator.Tests
         public IEnumerable<string> BadList { get; set; }
         public List<PatternMapItem> PatternMap { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Check for inactive
@@ -37,11 +39,10 @@ namespace Easy_Password_Validator.Tests
             var patterns = PatternMapService.GetPatterns(password, PatternMap);
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = patterns.Count(x => x.Length > Settings.MaxNeighboringCharacter) * -3;
+            ScoreModifier = patterns.Sum(x => -(int)Math.Pow(2, x.Length));
 
             // Return result
-            var pass = patterns.Any(x => x.Length > Settings.MaxNeighboringCharacter);
+            var pass = patterns.Any(x => x.Length > Settings.MaxNeighboringCharacter) == false;
 
             if (pass == false)
                 FailureMessage = $"Can have a maximum of {Settings.MaxNeighboringCharacter} characters that neighbor each other on the keyboard";

@@ -31,7 +31,6 @@ namespace Easy_Password_Validator.Interfaces
         /// Executes the test on the provided password and updates the score modifier
         /// </summary>
         /// <param name="password">The password to run the test on</param>
-        /// <param name="isL33t">Specifies whether this password is a l33t variant (scoring does not occur)</param>
-        public bool TestAndScore(string password, bool isL33t);
+        public bool TestAndScore(string password);
     }
 }

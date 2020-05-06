@@ -20,17 +20,17 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
         public IEnumerable<string> BadList { get; set; }
 
-        public bool TestAndScore(string password, bool isL33t)
+        public bool TestAndScore(string password)
         {
             // Reset
+            FailureMessage = null;
             ScoreModifier = 0;
 
             // Check for punctuation
             var punctuations = password.Count(char.IsPunctuation);
 
             // Adjust score
-            if (isL33t == false)
-                ScoreModifier = punctuations * 2;
+            ScoreModifier = punctuations * 5;
 
             // Return result
             var pass = Settings.RequirePunctuation == false || punctuations > 0;
