@@ -138,13 +138,21 @@ passwordValidator.UpdateL33tReplacements(l33TReplacements);
 The run order for l33t replacements has been laid out as follows, and you may select any run order for your custom replacements.
 
 10 ```L33tLevel.Advanced```, not contained in any other replacements
+
 20 ```L33tLevel.Advanced```, contained in another replacement at RunOrder 10
+
 30 ```L33tLevel.Advanced```, contained in at least one other replacement at RunOrder 10 or 20
+
 40 ```L33tLevel.Intermediate```, not contained in any other replacements
+
 50 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10 or 40
+
 60 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10, 20, 40, or 50
+
 70 ```L33tLevel.Basic```, not contained in any other replacements
+
 80 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 40, or 70
+
 90 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 20, 40, 50, 70, or 80
 
 ## Authors
