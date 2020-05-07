@@ -31,7 +31,7 @@ namespace Easy_Password_Validator.Tests
             if (File.Exists(fileName) == false)
                 throw new ArgumentException("Specified file does not exist", nameof(fileName));
 
-            BadList = File.ReadLines(fileName);
+            BadList = File.ReadAllLines(fileName);
         }
 
         public int ScoreModifier { get; set; }

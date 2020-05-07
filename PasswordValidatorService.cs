@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace Easy_Password_Validator
@@ -17,9 +18,9 @@ namespace Easy_Password_Validator
     /// </summary>
     public class PasswordValidatorService
     {
-        private readonly List<IPasswordTest> PasswordTests;
-        private readonly TestBadList Top10kBadList;
-        private readonly TestBadList Top100kBadList;
+        private List<IPasswordTest> PasswordTests;
+        private TestBadList Top10kBadList;
+        private TestBadList Top100kBadList;
 
         private IEnumerable<L33tReplacement> CustomReplacements;
 
@@ -29,6 +30,7 @@ namespace Easy_Password_Validator
         /// <param name="passwordRequirements">The parameters to analyse passwords with</param>
         public PasswordValidatorService(IPasswordRequirements passwordRequirements)
         {
+            // Prepare tests
             Settings = passwordRequirements;
             FailureMessages = new List<string>();
 
@@ -44,10 +46,8 @@ namespace Easy_Password_Validator
                 new TestPunctuation(passwordRequirements)
             };
 
-            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            Top10kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-10k-passwords.txt"));
-            Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
+            // Load lists
+            LoadBadLists();
         }
 
         /// <summary>
@@ -194,6 +194,46 @@ namespace Easy_Password_Validator
             Score += test.ScoreModifier;
 
             return pass;
+        }
+
+        /// <summary>
+        /// Loads the badlists into memory
+        /// </summary>
+        private void LoadBadLists()
+        {
+            // Prepare directory names
+            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var local10k = Path.Combine(directory, "BadLists\\top-10k-passwords.txt");
+            var local100k = Path.Combine(directory, "BadLists\\top-100k-passwords.txt");
+
+            var appdata10k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-10k-passwords.txt");
+            var appdata100k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-100k-passwords.txt");
+
+            var remote10k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt";
+            var remote100k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt";
+
+            // Load local copy
+            if (File.Exists(local10k))
+                Top10kBadList = new TestBadList(local10k);
+
+            if (File.Exists(local100k))
+                Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
+
+            if (Top10kBadList != null || Top100kBadList != null)
+                return;
+
+            // Load remote copy
+            Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
+            Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
+
+            using var client = new WebClient();
+
+            client.DownloadFile(remote10k, appdata10k);
+            client.DownloadFile(remote100k, appdata100k);
+
+            Top10kBadList = new TestBadList(appdata10k);
+            Top100kBadList = new TestBadList(appdata100k);
         }
 
         /// <summary>
