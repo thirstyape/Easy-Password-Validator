@@ -2,6 +2,23 @@
 
 This project was created to provide an easy to use and configurable password validation library. If the default configuration is sufficient for your needs the library can be used out of the box without further setup. However, if you have specific validation needs you can alter the library configuration settings and also provide custom validation methods.
 
+There are two parts to this library: score checking and validation testing. Testing a password will perform both actions. The score checking will provide an overall score to a password which is the sum of all test scores. The validation testing will return whether a password passed or failed the tests.
+
+The default implementation will check for the following:
+
+- Contains digits
+- Contains uppercase letters
+- Contains lowercase letters
+- Contains punctuation marks
+- Checks password length
+- Checks number of unique characters
+- Checks for Qwerty keyboard patterns (ex. asDFr$)
+- Checks for repeat characters (ex. tttttt)
+- Checks if password is in top 100,000 bad password list
+- Checks if decoded l33t versions of password are in top 10,000 bad password list
+
+These checks will result in a pass or fail value being returned based on the provided password requirements. The score is not altered by the requirements.
+
 ## Getting Started
 
 These instuctions can be used to acquire and implement the library.
@@ -11,8 +28,6 @@ These instuctions can be used to acquire and implement the library.
 To use this library either clone a copy of the repository or check out the NuGet package
 
 ### Usage
-
-There are two parts to this library: score checking and validation testing. Testing a password will perform both actions. The score checking will provide an overall score to a password which is the sum of all test scores. The validation testing will return whether a password passed or failed the tests.
 
 **Basic Example**
 
@@ -137,23 +152,15 @@ passwordValidator.UpdateL33tReplacements(l33TReplacements);
 
 The run order for l33t replacements has been laid out as follows, and you may select any run order for your custom replacements.
 
-10 ```L33tLevel.Advanced```, not contained in any other replacements
-
-20 ```L33tLevel.Advanced```, contained in another replacement at RunOrder 10
-
-30 ```L33tLevel.Advanced```, contained in at least one other replacement at RunOrder 10 or 20
-
-40 ```L33tLevel.Intermediate```, not contained in any other replacements
-
-50 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10 or 40
-
-60 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10, 20, 40, or 50
-
-70 ```L33tLevel.Basic```, not contained in any other replacements
-
-80 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 40, or 70
-
-90 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 20, 40, 50, 70, or 80
+- 10 ```L33tLevel.Advanced```, not contained in any other replacements
+- 20 ```L33tLevel.Advanced```, contained in another replacement at RunOrder 10
+- 30 ```L33tLevel.Advanced```, contained in at least one other replacement at RunOrder 10 or 20
+- 40 ```L33tLevel.Intermediate```, not contained in any other replacements
+- 50 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10 or 40
+- 60 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10, 20, 40, or 50
+- 70 ```L33tLevel.Basic```, not contained in any other replacements
+- 80 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 40, or 70
+- 90 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 20, 40, 50, 70, or 80
 
 ## Authors
 
