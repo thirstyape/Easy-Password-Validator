@@ -25,7 +25,7 @@ These instuctions can be used to acquire and implement the library.
 
 ### Installation
 
-To use this library either clone a copy of the repository or check out the NuGet package
+To use this library either clone a copy of the repository or check out the [NuGet package](https://www.nuget.org/packages/Easy.Password.Validator/)
 
 ### Usage
 
