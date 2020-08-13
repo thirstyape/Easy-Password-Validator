@@ -18,9 +18,10 @@ namespace Easy_Password_Validator
     /// </summary>
     public class PasswordValidatorService
     {
-        private List<IPasswordTest> PasswordTests;
+        private readonly List<IPasswordTest> PasswordTests;
         private TestBadList Top10kBadList;
         private TestBadList Top100kBadList;
+        private bool BadListsLoaded;
 
         private IEnumerable<L33tReplacement> CustomReplacements;
 
@@ -157,18 +158,21 @@ namespace Easy_Password_Validator
         {
             var reversed = Reverse(password);
 
-            // Test top 10K list
-            if (isL33t)
+            if (BadListsLoaded)
             {
-                RunTest(password, Top10kBadList);
-                RunTest(reversed, Top10kBadList);
-            }
+                // Test top 10K list
+                if (isL33t)
+                {
+                    RunTest(password, Top10kBadList);
+                    RunTest(reversed, Top10kBadList);
+                }
 
-            // Test top 100K list
-            if (isL33t == false)
-            {
-                RunTest(password, Top100kBadList);
-                RunTest(reversed, Top100kBadList);
+                // Test top 100K list
+                if (isL33t == false)
+                {
+                    RunTest(password, Top100kBadList);
+                    RunTest(reversed, Top100kBadList);
+                }
             }
 
             // Test user list
@@ -201,39 +205,80 @@ namespace Easy_Password_Validator
         /// </summary>
         private void LoadBadLists()
         {
+            BadListsLoaded = LoadLocalBadLists() || LoadRemoteBadLists();
+        }
+
+        /// <summary>
+        /// Attempts to load locally stored copies of the badlists
+        /// </summary>
+        private bool LoadLocalBadLists()
+        {
+            try
+            {
+                // Prepare directory names
+                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                var local10k = Path.Combine(directory, "BadLists\\top-10k-passwords.txt");
+                var local100k = Path.Combine(directory, "BadLists\\top-100k-passwords.txt");
+
+                // Load local copy
+                if (File.Exists(local10k))
+                    Top10kBadList = new TestBadList(local10k);
+
+                if (File.Exists(local100k))
+                    Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
+
+                if (Top10kBadList != null && Top100kBadList != null)
+                    return true;
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to load remote copies of the badlists
+        /// </summary>
+        private bool LoadRemoteBadLists()
+        {
             // Prepare directory names
-            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            var local10k = Path.Combine(directory, "BadLists\\top-10k-passwords.txt");
-            var local100k = Path.Combine(directory, "BadLists\\top-100k-passwords.txt");
-
             var appdata10k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-10k-passwords.txt");
             var appdata100k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-100k-passwords.txt");
 
             var remote10k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt";
             var remote100k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt";
 
-            // Load local copy
-            if (File.Exists(local10k))
-                Top10kBadList = new TestBadList(local10k);
-
-            if (File.Exists(local100k))
-                Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
-
-            if (Top10kBadList != null || Top100kBadList != null)
-                return;
-
             // Load remote copy
-            Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
-            Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
+            try
+            {
+                using var client = new WebClient();
 
-            using var client = new WebClient();
+                if (Top10kBadList == null)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
+                    client.DownloadFile(remote10k, appdata10k);
+                    Top10kBadList = new TestBadList(appdata10k);
+                }
 
-            client.DownloadFile(remote10k, appdata10k);
-            client.DownloadFile(remote100k, appdata100k);
+                if (Top100kBadList == null)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
+                    client.DownloadFile(remote100k, appdata100k);
+                    Top100kBadList = new TestBadList(appdata100k);
+                }
 
-            Top10kBadList = new TestBadList(appdata10k);
-            Top100kBadList = new TestBadList(appdata100k);
+                if (Top10kBadList != null && Top100kBadList != null)
+                    return true;
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
