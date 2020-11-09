@@ -1,4 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Properties;
 
 using System.Collections.Generic;
 
@@ -44,7 +45,7 @@ namespace Easy_Password_Validator.Tests
             var pass = password.Length >= Settings.MinLength;
 
             if (pass == false)
-                FailureMessage = $"Password must be at least {Settings.MinLength} characters long";
+                FailureMessage = string.Format(Resources.FailedLength, Settings.MinLength);
 
             return pass;
         }

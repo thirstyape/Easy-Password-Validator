@@ -1,4 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Properties;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace Easy_Password_Validator.Tests
             var pass = Settings.RequireDigit == false || digits > 0;
 
             if (pass == false)
-                FailureMessage = "Must have at least one digit in password";
+                FailureMessage = Resources.FailedDigit;
 
             return pass;
         }

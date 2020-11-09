@@ -1,4 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Properties;
 
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Easy_Password_Validator.Tests
             var pass = repeats.Any(x => x.Length > Settings.MaxRepeatSameCharacter) == false;
 
             if (pass == false)
-                FailureMessage = $"Can have a maximum of {Settings.MaxRepeatSameCharacter} adjacent repeat characters";
+                FailureMessage = string.Format(Resources.FailedRepeat, Settings.MaxRepeatSameCharacter);
 
             return pass;
         }
