@@ -12,6 +12,11 @@ namespace Easy_Password_Validator.Tests
     /// </summary>
     public class TestPattern : IPasswordTest
     {
+        /// <summary>
+        /// Prepares test for use and allows using custom pattern
+        /// </summary>
+        /// <param name="passwordRequirements">Object containing current settings</param>
+        /// <param name="map">An optional custom pattern mapping to check</param>
         public TestPattern(IPasswordRequirements passwordRequirements, List<PatternMapItem> map = null)
         {
             Settings = passwordRequirements;
@@ -19,12 +24,22 @@ namespace Easy_Password_Validator.Tests
             PatternMap = map ?? PatternMapService.QwertyMap;
         }
 
+        /// <inheritdoc/>
         public int ScoreModifier { get; set; }
+
+        /// <inheritdoc/>
         public string FailureMessage { get; set; }
+
+        /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
+
+        /// <inheritdoc/>
         public IEnumerable<string> BadList { get; set; }
+
+        /// <inheritdoc/>
         public List<PatternMapItem> PatternMap { get; set; }
 
+        /// <inheritdoc/>
         public bool TestAndScore(string password)
         {
             // Reset

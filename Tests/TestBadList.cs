@@ -13,7 +13,7 @@ namespace Easy_Password_Validator.Tests
     public class TestBadList : IPasswordTest
     {
         /// <summary>
-        /// Accepts a list of bad passwords to check
+        /// Prepares test for use and accepts a list of bad passwords to check
         /// </summary>
         /// <param name="badList">The badlist to use</param>
         public TestBadList(IEnumerable<string> badList)

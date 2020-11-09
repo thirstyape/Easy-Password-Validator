@@ -10,16 +10,28 @@ namespace Easy_Password_Validator.Tests
     /// </summary>
     public class TestLowercase : IPasswordTest
     {
+        /// <summary>
+        /// Prepares test for use
+        /// </summary>
+        /// <param name="passwordRequirements">Object containing current settings</param>
         public TestLowercase(IPasswordRequirements passwordRequirements)
         {
             Settings = passwordRequirements;
         }
 
+        /// <inheritdoc/>
         public int ScoreModifier { get; set; }
+
+        /// <inheritdoc/>
         public string FailureMessage { get; set; }
+
+        /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
+
+        /// <inheritdoc/>
         public IEnumerable<string> BadList { get; set; }
 
+        /// <inheritdoc/>
         public bool TestAndScore(string password)
         {
             // Reset
