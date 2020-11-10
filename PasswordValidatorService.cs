@@ -72,7 +72,7 @@ namespace Easy_Password_Validator
         /// </summary>
         /// <param name="password">The password to test</param>
         /// <param name="userInformation">An optional list containing user information to compare against the password</param>
-        /// <param name="languageCode">AN optional language code used for error text</param>
+        /// <param name="languageCode">An optional language code used for error text</param>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public bool TestAndScore(string password, IEnumerable<string> userInformation = null, string languageCode = null)
