@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 
 namespace Easy_Password_Validator
 {
@@ -71,8 +72,10 @@ namespace Easy_Password_Validator
         /// </summary>
         /// <param name="password">The password to test</param>
         /// <param name="userInformation">An optional list containing user information to compare against the password</param>
+        /// <param name="languageCode">AN optional language code used for error text</param>
+        /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public bool TestAndScore(string password, IEnumerable<string> userInformation = null)
+        public bool TestAndScore(string password, IEnumerable<string> userInformation = null, string languageCode = null)
         {
             // Input validation
             if (string.IsNullOrEmpty(password))
@@ -81,6 +84,15 @@ namespace Easy_Password_Validator
             // Reset
             FailureMessages.Clear();
             Score = 0;
+
+            // Update error output language
+            if (string.IsNullOrEmpty(languageCode) == false)
+            {
+                if (CheckValidLanguage(languageCode) == false)
+                    throw new ArgumentException("Provided language code is not supported", nameof(languageCode));
+
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(languageCode);
+            }
 
             // Get l33t variants
             IEnumerable<string> l33t;
@@ -300,6 +312,31 @@ namespace Easy_Password_Validator
         private string Reverse(string value)
         {
             return string.Join(string.Empty, GetGraphemeClusters(value).Reverse().ToArray());
+        }
+
+        /// <summary>
+        /// Checks to see that the user provided language code is supported
+        /// </summary>
+        /// <param name="languageCode">The code to check</param>
+        private bool CheckValidLanguage(string languageCode)
+        {
+            if (languageCode.Length == 2)
+            {
+                return languageCode switch
+                {
+                    "en" => true,
+                    "de" => true,
+                    _ => false
+                };
+            }
+            else if (languageCode.Length == 5 && languageCode[2] == '-')
+            {
+                return CheckValidLanguage(languageCode.Substring(0, 2));
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

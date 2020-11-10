@@ -124,22 +124,22 @@
     <value>Must have at least one digit in password</value>
   </data>
   <data name="FailedLength" xml:space="preserve">
-    <value>Password must be at least '{0}' characters long</value>
+    <value>Password must be at least {0} characters long</value>
   </data>
   <data name="FailedLowercase" xml:space="preserve">
     <value>Must have at least one lowercase letter in password</value>
   </data>
   <data name="FailedPattern" xml:space="preserve">
-    <value>Can have a maximum of '{0}' characters that neighbor each other on the keyboard</value>
+    <value>Can have a maximum of {0} characters that neighbor each other on the keyboard</value>
   </data>
   <data name="FailedPunctuation" xml:space="preserve">
     <value>Must have at least one punctuation mark in password</value>
   </data>
   <data name="FailedRepeat" xml:space="preserve">
-    <value>Can have a maximum of '{0}' adjacent repeat characters</value>
+    <value>Can have a maximum of {0} adjacent repeat characters</value>
   </data>
   <data name="FailedUnique" xml:space="preserve">
-    <value>Must have at least '{0}' unique characters in password</value>
+    <value>Must have at least {0} unique characters in password</value>
   </data>
   <data name="FailedUppercase" xml:space="preserve">
     <value>Must have at least one uppercase letter in password</value>
