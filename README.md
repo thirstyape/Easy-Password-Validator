@@ -6,16 +6,16 @@ There are two parts to this library: score checking and validation testing. Test
 
 The default implementation will check for the following:
 
-- Contains digits
-- Contains uppercase letters
-- Contains lowercase letters
-- Contains punctuation marks
-- Checks password length
-- Checks number of unique characters
-- Checks for Qwerty keyboard patterns (ex. asDFr$)
-- Checks for repeat characters (ex. tttttt)
-- Checks if password is in top 100,000 bad password list
-- Checks if decoded l33t versions of password are in top 10,000 bad password list
+* Contains digits
+* Contains uppercase letters
+* Contains lowercase letters
+* Contains punctuation marks
+* Checks password length
+* Checks number of unique characters
+* Checks for Qwerty keyboard patterns (ex. asDFr$)
+* Checks for repeat characters (ex. tttttt)
+* Checks if password is in top 100,000 bad password list
+* Checks if decoded l33t versions of password are in top 10,000 bad password list
 
 These checks will result in a pass or fail value being returned based on the provided password requirements. The score is not altered by the requirements.
 
@@ -152,15 +152,40 @@ passwordValidator.UpdateL33tReplacements(l33TReplacements);
 
 The run order for l33t replacements has been laid out as follows, and you may select any run order for your custom replacements.
 
-- 10 ```L33tLevel.Advanced```, not contained in any other replacements
-- 20 ```L33tLevel.Advanced```, contained in another replacement at RunOrder 10
-- 30 ```L33tLevel.Advanced```, contained in at least one other replacement at RunOrder 10 or 20
-- 40 ```L33tLevel.Intermediate```, not contained in any other replacements
-- 50 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10 or 40
-- 60 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10, 20, 40, or 50
-- 70 ```L33tLevel.Basic```, not contained in any other replacements
-- 80 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 40, or 70
-- 90 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 20, 40, 50, 70, or 80
+* 10 ```L33tLevel.Advanced```, not contained in any other replacements
+* 20 ```L33tLevel.Advanced```, contained in another replacement at RunOrder 10
+* 30 ```L33tLevel.Advanced```, contained in at least one other replacement at RunOrder 10 or 20
+* 40 ```L33tLevel.Intermediate```, not contained in any other replacements
+* 50 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10 or 40
+* 60 ```L33tLevel.Intermediate```, contained in at least one other replacement at RunOrder 10, 20, 40, or 50
+* 70 ```L33tLevel.Basic```, not contained in any other replacements
+* 80 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 40, or 70
+* 90 ```L33tLevel.Basic```, contained in at least one other replacement at RunOrder 10, 20, 40, 50, 70, or 80
+
+**Using error messages in another language**
+
+Error messages are provided using .RESX files and are currently available in the following languages:
+
+* English
+* German
+
+By default error messages will be returned based on the language of the operating system (defaults to English if specified language is not available). To choose a specific language enter the language code in the ```.TestAndScore()``` method. Language codes are either 2 or 5 characters in length (ex. en, en-US, de, de-DE).
+
+```
+Console.WriteLine("Enter a username:");
+var username = Console.ReadLine();
+
+Console.WriteLine("Enter a password to test:");
+var password = Console.ReadLine();
+
+var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
+
+var pass = passwordValidator.TestAndScore(password, new string[] { username }, "de");
+```
+
+To add another language you must use the Git repository, the NuGet package does not support adding languages. To do so add a .RESX file with the proper language code and update the ```.CheckValidLanguage()``` method in ```PasswordValidatorService.cs```. To simplify the creation of the .RESX files you can use [Zeta Resource Editor](https://www.zeta-resource-editor.com/index.html) with the .zeproj file included in the repository.
+
+If you do add support for a language that is not bundled here please let me know or fork the repository so I can update the master branch (looking for high-quality translations only, i.e. no copy paste from translation services).
 
 ## Authors
 
@@ -179,3 +204,4 @@ Parts of this library have been inspired by:
 Thank you to:
 * Daniel Miessler for the [SecLists](https://github.com/danielmiessler/SecLists) project
 * [Kmg Design](https://www.iconfinder.com/kmgdesignid) for the project icon
+* [Uwe Keim](https://github.com/UweKeim) for help with translation system and German translation
