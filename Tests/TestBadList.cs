@@ -1,4 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Properties;
 
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Easy_Password_Validator.Tests
             var pass = match == false;
 
             if (pass == false)
-                FailureMessage = "Specified password is in list of known bad passwords";
+                FailureMessage = Resources.FailedBadList;
 
             return pass;
         }

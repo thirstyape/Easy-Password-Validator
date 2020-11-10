@@ -1,5 +1,6 @@
 ﻿using Easy_Password_Validator.Interfaces;
 using Easy_Password_Validator.Models;
+using Easy_Password_Validator.Properties;
 
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace Easy_Password_Validator.Tests
             var pass = patterns.Any(x => x.Length > Settings.MaxNeighboringCharacter) == false;
 
             if (pass == false)
-                FailureMessage = $"Can have a maximum of {Settings.MaxNeighboringCharacter} characters that neighbor each other on the keyboard";
+                FailureMessage = string.Format(Resources.FailedPattern, Settings.MaxNeighboringCharacter);
 
             return pass;
         }

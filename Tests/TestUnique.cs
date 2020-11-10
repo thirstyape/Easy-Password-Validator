@@ -1,4 +1,5 @@
 ﻿using Easy_Password_Validator.Interfaces;
+using Easy_Password_Validator.Properties;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace Easy_Password_Validator.Tests
             var pass = unique >= Settings.MinUniqueCharacters;
 
             if (pass == false)
-                FailureMessage = $"Must have at least {Settings.MinUniqueCharacters} unique characters in password";
+                FailureMessage = string.Format(Resources.FailedUnique, Settings.MinUniqueCharacters);
 
             return pass;
         }

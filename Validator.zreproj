@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project>
+  <configuration createBackupFiles="False" hideEmptyRows="False" hideTranslatedRows="False" useSpellChecker="True" resXIndentChar="	" neutralLanguageCode="en-US" languagesToDisplay="">
+    <globalSetting name="Filter-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+  &lt;property name="ActiveFilterString" /&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="Sort-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="3328800766" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
+    <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">False</globalSetting>
+    <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
+    <globalSetting name="autoTranslateForm.useOnlyExistingTranslationsCheckEdit.Checked">False</globalSetting>
+    <globalSetting name="autoTranslateForm.referenceLanguageComboBoxEdit.SelectedIndex">-1</globalSetting>
+    <globalSetting name="autoTranslateForm.languagesToTranslateCheckListBox">
+    </globalSetting>
+    <description>
+    </description>
+  </configuration>
+  <fileGroups>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e26bcc49-2cce-4b90-8730-53c96bceaf30">
+      <file filePath="Properties\Resources.resx" uniqueID="2ca567a3-5339-4184-95c7-4e0b71fa5e90" />
+      <file filePath="Properties\Resources.de.resx" uniqueID="e3a32fbe-94c5-4c67-b31d-04eac3fb5952" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+  </fileGroups>
+  <projectFolders />
+</project>
