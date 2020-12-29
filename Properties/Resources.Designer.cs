@@ -61,7 +61,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Specified password is in list of known bad passwords.
+        ///   Looks up a localized string similar to Password is in list of known bad passwords..
         /// </summary>
         internal static string FailedBadList {
             get {
@@ -70,7 +70,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must have at least one digit in password.
+        ///   Looks up a localized string similar to Must have at least one digit in password..
         /// </summary>
         internal static string FailedDigit {
             get {
@@ -79,7 +79,16 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must be at least {0} characters long.
+        ///   Looks up a localized string similar to Password must have entropy score of at least {0}..
+        /// </summary>
+        internal static string FailedEntropy {
+            get {
+                return ResourceManager.GetString("FailedEntropy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must be at least {0} characters long..
         /// </summary>
         internal static string FailedLength {
             get {
@@ -88,7 +97,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must have at least one lowercase letter in password.
+        ///   Looks up a localized string similar to Must have at least one lowercase letter in password..
         /// </summary>
         internal static string FailedLowercase {
             get {
@@ -97,7 +106,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can have a maximum of {0} characters that neighbor each other on the keyboard.
+        ///   Looks up a localized string similar to Password can have a maximum of {0} characters that neighbor each other on the keyboard..
         /// </summary>
         internal static string FailedPattern {
             get {
@@ -106,7 +115,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must have at least one punctuation mark in password.
+        ///   Looks up a localized string similar to Must have at least one punctuation mark in password..
         /// </summary>
         internal static string FailedPunctuation {
             get {
@@ -115,7 +124,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can have a maximum of {0} adjacent repeat characters.
+        ///   Looks up a localized string similar to Password can have a maximum of {0} adjacent repeat characters..
         /// </summary>
         internal static string FailedRepeat {
             get {
@@ -124,7 +133,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must have at least {0} unique characters in password.
+        ///   Looks up a localized string similar to Must have at least {0} unique characters in password..
         /// </summary>
         internal static string FailedUnique {
             get {
@@ -133,7 +142,7 @@ namespace Easy_Password_Validator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must have at least one uppercase letter in password.
+        ///   Looks up a localized string similar to Must have at least one uppercase letter in password..
         /// </summary>
         internal static string FailedUppercase {
             get {

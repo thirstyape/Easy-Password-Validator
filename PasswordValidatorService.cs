@@ -45,7 +45,8 @@ namespace Easy_Password_Validator
                 new TestDigit(passwordRequirements),
                 new TestLowercase(passwordRequirements),
                 new TestUppercase(passwordRequirements),
-                new TestPunctuation(passwordRequirements)
+                new TestPunctuation(passwordRequirements),
+                new TestEntropy(passwordRequirements)
             };
 
             // Load lists
