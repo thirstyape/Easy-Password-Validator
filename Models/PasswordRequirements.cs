@@ -35,7 +35,10 @@ namespace Easy_Password_Validator.Models
         public int MinScore { get; set; } = 50;
 
         /// <inheritdoc/>
-        public float MinEntropy { get; set; } = 1.0F;
+        public float MinEntropy { get; set; } = 2.5F;
+
+        /// <inheritdoc/>
+        public bool UseEntropy { get; set; }
 
         /// <inheritdoc/>
         public bool ExitOnFailure { get; set; }

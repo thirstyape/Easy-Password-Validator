@@ -14,7 +14,7 @@ The default implementation will check for the following:
 * Checks number of unique characters
 * Checks for Qwerty keyboard patterns (ex. asDFr$)
 * Checks for repeat characters (ex. tttttt)
-* Checks password entropy
+* Checks password entropy (disabled by default)
 * Checks if password is in top 100,000 bad password list
 * Checks if decoded l33t versions of password are in top 10,000 bad password list
 

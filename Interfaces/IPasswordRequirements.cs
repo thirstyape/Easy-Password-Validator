@@ -56,6 +56,11 @@
         public float MinEntropy { get; set; }
 
         /// <summary>
+        /// Specifies whether to use the entropy checking test
+        /// </summary>
+        public bool UseEntropy { get; set; }
+
+        /// <summary>
         /// Specifies whether to stop execution on the first failure or continue and report after all tests complete
         /// </summary>
         public bool ExitOnFailure { get; set; }

@@ -45,7 +45,7 @@ namespace Easy_Password_Validator.Tests
             ScoreModifier = 0;
 
             // Check for inactive
-            if (Settings.MinEntropy == 0)
+            if (Settings.UseEntropy == false || Settings.MinEntropy == 0)
                 return true;
 
             // Do work
@@ -58,6 +58,9 @@ namespace Easy_Password_Validator.Tests
                 var frequency = (float)item.Value / password.Length;
                 entropy -= frequency * (Math.Log(frequency) / log2);
             }
+
+            // Adjust score
+            ScoreModifier = (int)Math.Truncate(Math.Pow(2, entropy));
 
             // Return result
             var pass = Settings.MinEntropy <= entropy;
