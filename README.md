@@ -14,6 +14,7 @@ The default implementation will check for the following:
 * Checks number of unique characters
 * Checks for Qwerty keyboard patterns (ex. asDFr$)
 * Checks for repeat characters (ex. tttttt)
+* Checks password entropy (disabled by default)
 * Checks if password is in top 100,000 bad password list
 * Checks if decoded l33t versions of password are in top 10,000 bad password list
 
@@ -52,6 +53,33 @@ else
 if (pass == false)
     foreach (var message in passwordValidator.FailureMessages)
         Console.WriteLine(message);
+```
+
+**Usage as a service in Web API**
+
+The following example displays how to register the ```PasswordValidatorService``` as an injectable service.
+
+Modify Startup.cs as follows:
+
+```
+public void ConfigureServices(IServiceCollection services) {
+    // Your other startup items
+
+    // Register password validator
+    services.AddTransient(service => new PasswordValidatorService(new PasswordRequirements()));
+}
+```
+
+Once that has been done you can simply pull a copy into your controllers as follows:
+
+```
+public class MyCustomController : ControllerBase {
+    private readonly PasswordValidatorService PasswordValidator;
+
+    public MyCustomController(PasswordValidatorService passwordValidatorService) {
+        PasswordValidator = passwordValidatorService;
+    }
+}
 ```
 
 **Using custom configuration**
