@@ -36,7 +36,7 @@ namespace Easy_Password_Validator
             Settings = passwordRequirements;
             FailureMessages = new List<string>();
 
-            PasswordTests = new List<IPasswordTest>
+            PasswordTests = new List<IPasswordTest>()
             {
                 new TestLength(passwordRequirements),
                 new TestUnique(passwordRequirements),
@@ -239,7 +239,7 @@ namespace Easy_Password_Validator
                     Top10kBadList = new TestBadList(local10k);
 
                 if (File.Exists(local100k))
-                    Top100kBadList = new TestBadList(Path.Combine(directory, "BadLists\\top-100k-passwords.txt"));
+                    Top100kBadList = new TestBadList(local100k);
 
                 if (Top10kBadList != null && Top100kBadList != null)
                     return true;
