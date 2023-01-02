@@ -267,20 +267,21 @@ namespace Easy_Password_Validator
             // Load remote copy
             try
             {
-                using var client = new WebClient();
-
-                if (Top10kBadList == null)
+                using (var client = new WebClient())
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
-                    client.DownloadFile(remote10k, appdata10k);
-                    Top10kBadList = new TestBadList(appdata10k);
-                }
+                    if (Top10kBadList == null)
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
+                        client.DownloadFile(remote10k, appdata10k);
+                        Top10kBadList = new TestBadList(appdata10k);
+                    }
 
-                if (Top100kBadList == null)
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
-                    client.DownloadFile(remote100k, appdata100k);
-                    Top100kBadList = new TestBadList(appdata100k);
+                    if (Top100kBadList == null)
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
+                        client.DownloadFile(remote100k, appdata100k);
+                        Top100kBadList = new TestBadList(appdata100k);
+                    }
                 }
 
                 if (Top10kBadList != null && Top100kBadList != null)
@@ -323,11 +324,13 @@ namespace Easy_Password_Validator
         {
             if (languageCode.Length == 2)
             {
-                return languageCode switch
+                switch (languageCode)
                 {
-                    "en" => true,
-                    "de" => true,
-                    _ => false
+                    case "de":
+                    case "en":
+                        return true;
+                    default:
+                        return false;
                 };
             }
             else if (languageCode.Length == 5 && languageCode[2] == '-')

@@ -10,27 +10,27 @@ namespace Easy_Password_Validator.Interfaces
         /// <summary>
         /// The amount the password score should be changed by after running the test
         /// </summary>
-        public int ScoreModifier { get; set; }
+        int ScoreModifier { get; set; }
 
         /// <summary>
         /// A message to display to the end user on test failure
         /// </summary>
-        public string FailureMessage { get; set; }
+        string FailureMessage { get; set; }
 
         /// <summary>
         /// Container to pass validator configuration to tester
         /// </summary>
-        public IPasswordRequirements Settings { get; set; }
+        IPasswordRequirements Settings { get; set; }
 
         /// <summary>
         /// Contains an optional listing of invalid passwords to compare against
         /// </summary>
-        public IEnumerable<string> BadList { get; set; }
+        IEnumerable<string> BadList { get; set; }
 
         /// <summary>
         /// Executes the test on the provided password and updates the score modifier
         /// </summary>
         /// <param name="password">The password to run the test on</param>
-        public bool TestAndScore(string password);
+        bool TestAndScore(string password);
     }
 }

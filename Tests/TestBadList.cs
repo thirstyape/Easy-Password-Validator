@@ -55,7 +55,7 @@ namespace Easy_Password_Validator.Tests
             ScoreModifier = 0;
 
             // Check for match
-            var match = BadList.Any(x => x.Contains(password, StringComparison.OrdinalIgnoreCase));
+            var match = BadList.Any(x => x.IndexOf(password, StringComparison.OrdinalIgnoreCase) >= 0);
 
             // Adjust score
             ScoreModifier = match ? -50 : 0;

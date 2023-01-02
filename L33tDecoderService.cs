@@ -133,13 +133,18 @@ namespace Easy_Password_Validator
                 throw new ArgumentNullException(nameof(replacements), $"Must provide replacements list when using custom {nameof(L33tLevel)}");
 
             // Run appropriate decoder
-            return level switch
+            switch (level)
             {
-                L33tLevel.Basic => Decode(l33t, BasicReplacements),
-                L33tLevel.Intermediate => Decode(l33t, BasicReplacements.Concat(IntermediateReplacements)),
-                L33tLevel.Advanced => Decode(l33t, BasicReplacements.Concat(IntermediateReplacements).Concat(AdvancedReplacements)),
-                L33tLevel.Custom => Decode(l33t, replacements),
-                _ => throw new ArgumentException($"Invalid {nameof(L33tLevel)} specified", nameof(level))
+                case L33tLevel.Basic:
+                    return Decode(l33t, BasicReplacements);
+                case L33tLevel.Intermediate:
+                    return Decode(l33t, BasicReplacements.Concat(IntermediateReplacements));
+                case L33tLevel.Advanced:
+                    return Decode(l33t, BasicReplacements.Concat(IntermediateReplacements).Concat(AdvancedReplacements));
+                case L33tLevel.Custom:
+                    return Decode(l33t, replacements);
+                default:
+                    throw new ArgumentException($"Invalid {nameof(L33tLevel)} specified", nameof(level));
             };
         }
 
