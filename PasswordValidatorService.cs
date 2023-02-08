@@ -324,7 +324,7 @@ namespace Easy_Password_Validator
         {
             if (languageCode.Length == 2)
             {
-                switch (languageCode)
+                switch (languageCode.ToLower())
                 {
                     case "de":
                     case "en":
