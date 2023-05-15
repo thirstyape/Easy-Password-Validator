@@ -1,5 +1,8 @@
 # Easy Password Validator
 
+[![MIT](https://img.shields.io/github/license/thirstyape/Easy-Password-Validator)](https://github.com/thirstyape/Easy-Password-Validator/blob/master/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Easy.Password.Validator.svg)](https://www.nuget.org/packages/Easy.Password.Validator/)
+
 This project was created to provide an easy to use and configurable password validation library. If the default configuration is sufficient for your needs the library can be used out of the box without further setup. However, if you have specific validation needs you can alter the library configuration settings and also provide custom validation methods.
 
 There are two parts to this library: score checking and validation testing. Testing a password will perform both actions. The score checking will provide an overall score to a password which is the sum of all test scores. The validation testing will return whether a password passed or failed the tests.
