@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-    /// <summary>
-    /// Checks to see whether a password meets the minimum entropy requirements
-    /// </summary>
-    public class TestEntropy : IPasswordTest
+	/// <summary>
+	/// Checks to see whether a password meets the minimum entropy requirements
+	/// </summary>
+	public class TestEntropy : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -30,9 +30,6 @@ namespace Easy_Password_Validator.Tests
 
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> BadList { get; set; }
 
         /// <inheritdoc/>
         public List<PatternMapItem> PatternMap { get; set; }

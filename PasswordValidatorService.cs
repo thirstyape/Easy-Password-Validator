@@ -14,333 +14,347 @@ using System.Threading;
 
 namespace Easy_Password_Validator
 {
-    /// <summary>
-    /// Main class to analyse passwords via requirement checks and scoring
-    /// </summary>
-    public class PasswordValidatorService
-    {
-        private readonly List<IPasswordTest> PasswordTests;
-        private TestBadList Top10kBadList;
-        private TestBadList Top100kBadList;
-        private bool BadListsLoaded;
+	/// <summary>
+	/// Main class to analyse passwords via requirement checks and scoring
+	/// </summary>
+	public class PasswordValidatorService
+	{
+		private readonly List<IPasswordTest> PasswordTests;
+		private readonly List<TestBadList> BadListTests;
 
-        private IEnumerable<L33tReplacement> CustomReplacements;
+		private IEnumerable<L33tReplacement> CustomReplacements;
+		private readonly string BadListDirectory;
 
-        /// <summary>
-        /// Prepares the validator service for use analysing passwords
-        /// </summary>
-        /// <param name="passwordRequirements">The parameters to analyse passwords with</param>
-        public PasswordValidatorService(IPasswordRequirements passwordRequirements)
-        {
-            // Prepare tests
-            Settings = passwordRequirements;
-            FailureMessages = new List<string>();
+		/// <summary>
+		/// Prepares the validator service for use analysing passwords
+		/// </summary>
+		/// <param name="passwordRequirements">The parameters to analyse passwords with</param>
+		/// <param name="badListDirectory">A custom directory containing the Top 10K and Top 100K bad list files</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null)
+		{
+			// Configure class
+			Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
+			FailureMessages = new List<string>();
 
-            PasswordTests = new List<IPasswordTest>()
-            {
-                new TestLength(passwordRequirements),
-                new TestUnique(passwordRequirements),
-                new TestRepeat(passwordRequirements),
-                new TestPattern(passwordRequirements),
-                new TestDigit(passwordRequirements),
-                new TestLowercase(passwordRequirements),
-                new TestUppercase(passwordRequirements),
-                new TestPunctuation(passwordRequirements),
-                new TestEntropy(passwordRequirements)
-            };
+			if (string.IsNullOrWhiteSpace(badListDirectory))
+				BadListDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BadLists");
+			else
+				BadListDirectory = badListDirectory;
 
-            // Load lists
-            LoadBadLists();
-        }
+			// Prepare tests
+			PasswordTests = new List<IPasswordTest>()
+			{
+				new TestLength(passwordRequirements),
+				new TestUnique(passwordRequirements),
+				new TestRepeat(passwordRequirements),
+				new TestPattern(passwordRequirements),
+				new TestDigit(passwordRequirements),
+				new TestLowercase(passwordRequirements),
+				new TestUppercase(passwordRequirements),
+				new TestPunctuation(passwordRequirements),
+				new TestEntropy(passwordRequirements)
+			};
 
-        /// <summary>
-        /// The resulting score of an analysed password
-        /// </summary>
-        public int Score { get; private set; }
+			BadListTests = new List<TestBadList>();
 
-        /// <summary>
-        /// The configuration settings to use when analysing passwords
-        /// </summary>
-        public IPasswordRequirements Settings { get; private set; }
+			// Load lists
+			LoadBadLists();
+		}
 
-        /// <summary>
-        /// Contains a listing of any reasons a password failed analysis
-        /// </summary>
-        public IList<string> FailureMessages { get; private set; }
+		/// <summary>
+		/// The resulting score of an analysed password
+		/// </summary>
+		public int Score { get; private set; }
 
-        /// <summary>
-        /// Runs scoring and validation on the specified password
-        /// </summary>
-        /// <param name="password">The password to test</param>
-        /// <param name="userInformation">An optional list containing user information to compare against the password</param>
-        /// <param name="languageCode">An optional language code used for error text</param>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public bool TestAndScore(string password, IEnumerable<string> userInformation = null, string languageCode = null)
-        {
-            // Input validation
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentNullException(nameof(password), "Must provide password to analyse");
+		/// <summary>
+		/// The configuration settings to use when analysing passwords
+		/// </summary>
+		public IPasswordRequirements Settings { get; private set; }
 
-            // Reset
-            FailureMessages.Clear();
-            Score = 0;
+		/// <summary>
+		/// Contains a listing of any reasons a password failed analysis
+		/// </summary>
+		public IList<string> FailureMessages { get; private set; }
 
-            // Update error output language
-            if (string.IsNullOrEmpty(languageCode) == false)
-            {
-                if (CheckValidLanguage(languageCode) == false)
-                    throw new ArgumentException("Provided language code is not supported", nameof(languageCode));
+		/// <summary>
+		/// Runs scoring and validation on the specified password
+		/// </summary>
+		/// <param name="password">The password to test</param>
+		/// <param name="userInformation">An optional list containing user information to compare against the password</param>
+		/// <param name="languageCode">An optional language code used for error text</param>
+		/// <exception cref="ArgumentException"></exception>
+		/// <exception cref="ArgumentNullException"></exception>
+		public bool TestAndScore(string password, IEnumerable<string> userInformation = null, string languageCode = null)
+		{
+			// Input validation
+			if (string.IsNullOrEmpty(password))
+				throw new ArgumentNullException(nameof(password), "Must provide password to analyse");
 
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(languageCode);
-            }
+			// Reset
+			FailureMessages.Clear();
+			Score = 0;
 
-            // Get l33t variants
-            IEnumerable<string> l33t;
+			// Update error output language
+			if (string.IsNullOrWhiteSpace(languageCode) == false)
+			{
+				if (CheckValidLanguage(languageCode) == false)
+					throw new ArgumentException("Provided language code is not supported", nameof(languageCode));
 
-            if (CustomReplacements == null)
-                l33t = L33tDecoderService.Decode(password, L33tLevel.Advanced);
-            else
-                l33t = L33tDecoderService.Decode(password, L33tLevel.Custom, CustomReplacements);
+				Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(languageCode);
+			}
 
-            // Run general tests
-            RunPasswordTests(password);
+			// Get l33t variants
+			IEnumerable<string> l33t;
 
-            // Run list tests
-            TestBadList userBadList = null;
+			if (CustomReplacements == null)
+				l33t = L33tDecoderService.Decode(password, L33tLevel.Advanced);
+			else
+				l33t = L33tDecoderService.Decode(password, L33tLevel.Custom, CustomReplacements);
 
-            if (userInformation != null)
-                userBadList = new TestBadList(userInformation);
+			// Run general tests
+			RunPasswordTests(password);
 
-            RunBadListTests(password, false, userBadList);
+			// Run list tests
+			if (userInformation != null && userInformation.Any())
+			{
+				var existing = BadListTests.FirstOrDefault(x => x.ListType == BadListTypes.UserInformation);
 
-            foreach (var variant in l33t)
-                if (Settings.ExitOnFailure == false || FailureMessages.Count == 0)
-                    RunBadListTests(variant, true, userBadList);
+				if (existing != null)
+					existing.BadList = userInformation;
+				else
+					BadListTests.Add(new TestBadList(userInformation) { ListType = BadListTypes.UserInformation, TestL33tVariants = true });
+			}
 
-            // Remove duplicate failure messages (l33t variants may cause this)
-            FailureMessages = FailureMessages.Distinct().ToList();
+			RunBadListTests(password, false);
 
-            // Return result
-            if (Settings.MinScore > 0)
-                return Score >= Settings.MinScore && FailureMessages.Count == 0;
-            else
-                return FailureMessages.Count == 0;
-        }
+			foreach (var variant in l33t)
+				if (Settings.ExitOnFailure == false || FailureMessages.Count == 0)
+					RunBadListTests(variant, true);
 
-        /// <summary>
-        /// Adds a custom password test to the list of tests that will be run against provided passwords
-        /// </summary>
-        /// <param name="test">The test to add</param>
-        public void AddTest(IPasswordTest test)
-        {
-            PasswordTests.Add(test);
-        }
+			// Remove duplicate failure messages (l33t variants may cause this)
+			FailureMessages = FailureMessages.Distinct().ToList();
 
-        /// <summary>
-        /// Updates the collection of l33t replacements that will be used to decode l33t based passwords
-        /// </summary>
-        /// <param name="l33TReplacements">The replacements to use</param>
-        public void UpdateL33tReplacements(IEnumerable<L33tReplacement> l33TReplacements)
-        {
-            CustomReplacements = l33TReplacements;
-        }
+			// Return result
+			if (Settings.MinScore > 0)
+				return Score >= Settings.MinScore && FailureMessages.Count == 0;
+			else
+				return FailureMessages.Count == 0;
+		}
 
-        /// <summary>
-        /// Runs each loaded password test against the provided password
-        /// </summary>
-        /// <param name="password">The password to test</param>
-        private void RunPasswordTests(string password)
-        {
-            foreach (var test in PasswordTests)
-            {
-                var pass = RunTest(password, test);
+		/// <summary>
+		/// Adds a custom password test to the list of tests that will be run against provided passwords
+		/// </summary>
+		/// <param name="test">The test to add</param>
+		public void AddTest(IPasswordTest test)
+		{
+			if (test == null)
+				return;
 
-                if (pass == false && Settings.ExitOnFailure)
-                    break;
-            }
-        }
+			test.Settings = Settings;
 
-        /// <summary>
-        /// Runs each applicable bad list test against the provided password
-        /// </summary>
-        /// <param name="password">The password to test</param>
-        /// <param name="isL33t">Specifies whether this password is a l33t variant</param>
-        /// <param name="userBadList">An optional bad list to check against containing user information</param>
-        private void RunBadListTests(string password, bool isL33t, TestBadList userBadList = null)
-        {
-            var reversed = Reverse(password);
+			if (test is TestBadList badList)
+				BadListTests.Add(badList);
+			else
+				PasswordTests.Add(test);
+		}
 
-            if (BadListsLoaded)
-            {
-                // Test top 10K list
-                if (isL33t)
-                {
-                    RunTest(password, Top10kBadList);
-                    RunTest(reversed, Top10kBadList);
-                }
+		/// <summary>
+		/// Updates the password requirements to use in each test
+		/// </summary>
+		/// <param name="passwordRequirements">The parameters to analyse passwords with</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public void UpdatePasswordRequirements(IPasswordRequirements passwordRequirements)
+		{
+			Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
 
-                // Test top 100K list
-                if (isL33t == false)
-                {
-                    RunTest(password, Top100kBadList);
-                    RunTest(reversed, Top100kBadList);
-                }
-            }
+			foreach (var test in PasswordTests)
+				test.Settings = Settings;
 
-            // Test user list
-            if (userBadList != null)
-            {
-                RunTest(password, userBadList);
-                RunTest(reversed, userBadList);
-            }
-        }
+			foreach (var list in BadListTests) 
+				list.Settings = Settings;
+		}
 
-        /// <summary>
-        /// Runs a single test on a password and updates the failure message and score
-        /// </summary>
-        /// <param name="password">The password to test</param>
-        /// <param name="test">The test to run on the password</param>
-        private bool RunTest(string password, IPasswordTest test)
-        {
-            var pass = test.TestAndScore(password);
+		/// <summary>
+		/// Updates the collection of l33t replacements that will be used to decode l33t based passwords
+		/// </summary>
+		/// <param name="l33TReplacements">The replacements to use</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public void UpdateL33tReplacements(IEnumerable<L33tReplacement> l33TReplacements)
+		{
+			CustomReplacements = l33TReplacements ?? throw new ArgumentNullException(nameof(l33TReplacements), "Must provide L33T replacements collection");
+		}
 
-            if (pass == false)
-                FailureMessages.Add(test.FailureMessage);
+		/// <summary>
+		/// Runs each loaded password test against the provided password
+		/// </summary>
+		/// <param name="password">The password to test</param>
+		private void RunPasswordTests(string password)
+		{
+			foreach (var test in PasswordTests)
+			{
+				var pass = RunTest(password, test);
 
-            Score += test.ScoreModifier;
+				if (pass == false && Settings.ExitOnFailure)
+					break;
+			}
+		}
 
-            return pass;
-        }
+		/// <summary>
+		/// Runs each applicable bad list test against the provided password
+		/// </summary>
+		/// <param name="password">The password to test</param>
+		/// <param name="isL33t">Specifies whether this password is a l33t variant</param>
+		private void RunBadListTests(string password, bool isL33t)
+		{
+			var reversed = Reverse(password);
+			var current = isL33t ? BadListTests.Where(x => x.TestL33tVariants) : BadListTests.AsEnumerable();
 
-        /// <summary>
-        /// Loads the badlists into memory
-        /// </summary>
-        private void LoadBadLists()
-        {
-            BadListsLoaded = LoadLocalBadLists() || LoadRemoteBadLists();
-        }
+			foreach (var list in current)
+			{
+				RunTest(password, list);
+				RunTest(reversed, list);
+			}
+		}
 
-        /// <summary>
-        /// Attempts to load locally stored copies of the badlists
-        /// </summary>
-        private bool LoadLocalBadLists()
-        {
-            try
-            {
-                // Prepare directory names
-                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		/// <summary>
+		/// Runs a single test on a password and updates the failure message and score
+		/// </summary>
+		/// <param name="password">The password to test</param>
+		/// <param name="test">The test to run on the password</param>
+		private bool RunTest(string password, IPasswordTest test)
+		{
+			var pass = test.TestAndScore(password);
 
-                var local10k = Path.Combine(directory, "BadLists\\top-10k-passwords.txt");
-                var local100k = Path.Combine(directory, "BadLists\\top-100k-passwords.txt");
+			if (pass == false)
+				FailureMessages.Add(test.FailureMessage);
 
-                // Load local copy
-                if (File.Exists(local10k))
-                    Top10kBadList = new TestBadList(local10k);
+			Score += test.ScoreModifier;
 
-                if (File.Exists(local100k))
-                    Top100kBadList = new TestBadList(local100k);
+			return pass;
+		}
 
-                if (Top10kBadList != null && Top100kBadList != null)
-                    return true;
-                else
-                    return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+		/// <summary>
+		/// Loads the badlists into memory
+		/// </summary>
+		private void LoadBadLists()
+		{
+			if (LoadLocalBadLists() == false)
+				LoadRemoteBadLists();
+		}
 
-        /// <summary>
-        /// Attempts to load remote copies of the badlists
-        /// </summary>
-        private bool LoadRemoteBadLists()
-        {
-            // Prepare directory names
-            var appdata10k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-10k-passwords.txt");
-            var appdata100k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-100k-passwords.txt");
+		/// <summary>
+		/// Attempts to load locally stored copies of the badlists
+		/// </summary>
+		private bool LoadLocalBadLists()
+		{
+			try
+			{
+				// Prepare directory names
+				var local10k = Path.Combine(BadListDirectory, "top-10k-passwords.txt");
+				var local100k = Path.Combine(BadListDirectory, "top-100k-passwords.txt");
 
-            var remote10k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt";
-            var remote100k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt";
+				// Load local copy
+				if (File.Exists(local10k))
+					BadListTests.Add(new TestBadList(local10k) { ListType = BadListTypes.Top10K });
 
-            // Load remote copy
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    if (Top10kBadList == null)
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
-                        client.DownloadFile(remote10k, appdata10k);
-                        Top10kBadList = new TestBadList(appdata10k);
-                    }
+				if (File.Exists(local100k))
+					BadListTests.Add(new TestBadList(local100k) { ListType = BadListTypes.Top100K });
 
-                    if (Top100kBadList == null)
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
-                        client.DownloadFile(remote100k, appdata100k);
-                        Top100kBadList = new TestBadList(appdata100k);
-                    }
-                }
+				return BadListTests.Count == 2;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 
-                if (Top10kBadList != null && Top100kBadList != null)
-                    return true;
-                else
-                    return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+		/// <summary>
+		/// Attempts to load remote copies of the badlists
+		/// </summary>
+		private bool LoadRemoteBadLists()
+		{
+			// Prepare directory names
+			var appdata10k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-10k-passwords.txt");
+			var appdata100k = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Easy-Password-Validator\\BadLists\\top-100k-passwords.txt");
 
-        /// <summary>
-        /// Separates a string into its grapheme clusters (or characters)
-        /// </summary>
-        /// <param name="value">The value to separate</param>
-        private IEnumerable<string> GetGraphemeClusters(string value)
-        {
-            var enumerator = StringInfo.GetTextElementEnumerator(value);
+			var remote10k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt";
+			var remote100k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt";
 
-            while (enumerator.MoveNext())
-                yield return (string)enumerator.Current;
-        }
+			// Load remote copy
+			try
+			{
+				using (var client = new WebClient())
+				{
+					if (BadListTests.Any(x => x.ListType == BadListTypes.Top10K) == false)
+					{
+						Directory.CreateDirectory(Path.GetDirectoryName(appdata10k));
+						client.DownloadFile(remote10k, appdata10k);
+						BadListTests.Add(new TestBadList(appdata10k) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
+					}
 
-        /// <summary>
-        /// Reverses the provided string
-        /// </summary>
-        /// <param name="value">The value to reverse</param>
-        private string Reverse(string value)
-        {
-            return string.Join(string.Empty, GetGraphemeClusters(value).Reverse().ToArray());
-        }
+					if (BadListTests.Any(x => x.ListType == BadListTypes.Top100K) == false)
+					{
+						Directory.CreateDirectory(Path.GetDirectoryName(appdata100k));
+						client.DownloadFile(remote100k, appdata100k);
+						BadListTests.Add(new TestBadList(appdata100k) { ListType = BadListTypes.Top100K });
+					}
+				}
 
-        /// <summary>
-        /// Checks to see that the user provided language code is supported
-        /// </summary>
-        /// <param name="languageCode">The code to check</param>
-        private bool CheckValidLanguage(string languageCode)
-        {
-            if (languageCode.Length == 2)
-            {
-                switch (languageCode.ToLower())
-                {
-                    case "de":
-                    case "en":
-                        return true;
-                    default:
-                        return false;
-                };
-            }
-            else if (languageCode.Length == 5 && languageCode[2] == '-')
-            {
-                return CheckValidLanguage(languageCode.Substring(0, 2));
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
+				return BadListTests.Count == 2;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Separates a string into its grapheme clusters (or characters)
+		/// </summary>
+		/// <param name="value">The value to separate</param>
+		private IEnumerable<string> GetGraphemeClusters(string value)
+		{
+			var enumerator = StringInfo.GetTextElementEnumerator(value);
+
+			while (enumerator.MoveNext())
+				yield return (string)enumerator.Current;
+		}
+
+		/// <summary>
+		/// Reverses the provided string
+		/// </summary>
+		/// <param name="value">The value to reverse</param>
+		private string Reverse(string value)
+		{
+			return string.Join(string.Empty, GetGraphemeClusters(value).Reverse().ToArray());
+		}
+
+		/// <summary>
+		/// Checks to see that the user provided language code is supported
+		/// </summary>
+		/// <param name="languageCode">The code to check</param>
+		private bool CheckValidLanguage(string languageCode)
+		{
+			if (languageCode.Length == 2)
+			{
+				switch (languageCode.ToLower())
+				{
+					case "de":
+					case "en":
+						return true;
+					default:
+						return false;
+				};
+			}
+			else if (languageCode.Length == 5 && languageCode[2] == '-')
+			{
+				return CheckValidLanguage(languageCode.Substring(0, 2));
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 }

@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-    /// <summary>
-    /// Checks to see whether a password meets the maximum neighboring characters requirements
-    /// </summary>
-    public class TestPattern : IPasswordTest
+	/// <summary>
+	/// Checks to see whether a password meets the maximum neighboring characters requirements
+	/// </summary>
+	public class TestPattern : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use and allows using custom pattern
@@ -33,9 +33,6 @@ namespace Easy_Password_Validator.Tests
 
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> BadList { get; set; }
 
         /// <inheritdoc/>
         public List<PatternMapItem> PatternMap { get; set; }

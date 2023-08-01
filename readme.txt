@@ -10,3 +10,6 @@ Download https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/ma
 \ProjectBuildDirectory\BadLists\top-100k-passwords.txt
 
 As long as the output directory of your project has a BadLists\ subfolder containing the two files listed above they will run from the local copy.
+
+Keep in mind that this only works for applications with file system access. For example, WebAssembly applications will not be able to use the lists at all.
+In this event you can still supply your own lists by adding a custom test.

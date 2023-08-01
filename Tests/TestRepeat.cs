@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-    /// <summary>
-    /// Checks to see whether a password meets the maximum consecutive characters requirements
-    /// </summary>
-    public class TestRepeat : IPasswordTest
+	/// <summary>
+	/// Checks to see whether a password meets the maximum consecutive characters requirements
+	/// </summary>
+	public class TestRepeat : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -29,9 +29,6 @@ namespace Easy_Password_Validator.Tests
 
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> BadList { get; set; }
 
         /// <inheritdoc/>
         public bool TestAndScore(string password)

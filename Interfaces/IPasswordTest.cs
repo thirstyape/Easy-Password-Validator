@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Easy_Password_Validator.Interfaces
+﻿namespace Easy_Password_Validator.Interfaces
 {
-    /// <summary>
-    /// Interface to define requirements for tests that will be run against passwords
-    /// </summary>
-    public interface IPasswordTest
+	/// <summary>
+	/// Interface to define requirements for tests that will be run against passwords
+	/// </summary>
+	public interface IPasswordTest
     {
         /// <summary>
         /// The amount the password score should be changed by after running the test
@@ -21,11 +19,6 @@ namespace Easy_Password_Validator.Interfaces
         /// Container to pass validator configuration to tester
         /// </summary>
         IPasswordRequirements Settings { get; set; }
-
-        /// <summary>
-        /// Contains an optional listing of invalid passwords to compare against
-        /// </summary>
-        IEnumerable<string> BadList { get; set; }
 
         /// <summary>
         /// Executes the test on the provided password and updates the score modifier

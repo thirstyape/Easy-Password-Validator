@@ -1,4 +1,5 @@
-﻿using Easy_Password_Validator.Interfaces;
+﻿using Easy_Password_Validator.Enums;
+using Easy_Password_Validator.Interfaces;
 using Easy_Password_Validator.Properties;
 
 using System;
@@ -8,18 +9,19 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-    /// <summary>
-    /// Checks whether a password is contained within the provided list
-    /// </summary>
-    public class TestBadList : IPasswordTest
+	/// <summary>
+	/// Checks whether a password is contained within the provided list
+	/// </summary>
+	public class TestBadList : IPasswordTest
     {
-        /// <summary>
-        /// Prepares test for use and accepts a list of bad passwords to check
-        /// </summary>
-        /// <param name="badList">The badlist to use</param>
-        public TestBadList(IEnumerable<string> badList)
-        {
-            BadList = badList;
+		/// <summary>
+		/// Prepares test for use and accepts a list of bad passwords to check
+		/// </summary>
+		/// <param name="badList">The badlist to use</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public TestBadList(IEnumerable<string> badList)
+		{
+            BadList = badList ?? throw new ArgumentNullException(nameof(badList), "Must provide bad list collection");
         }
 
         /// <summary>
@@ -44,8 +46,23 @@ namespace Easy_Password_Validator.Tests
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
 
-        /// <inheritdoc/>
-        public IEnumerable<string> BadList { get; set; }
+		/// <summary>
+		/// Contains a listing of invalid passwords to compare against
+		/// </summary>
+		public IEnumerable<string> BadList { get; set; }
+
+        /// <summary>
+        /// The type of list to be tested
+        /// </summary>
+        /// <remarks>
+        /// Primarily used for loading Top 10K and Top 100K lists
+        /// </remarks>
+        public BadListTypes ListType { get; set; } = BadListTypes.UserSupplied;
+
+        /// <summary>
+        /// Specifies whether to use this list when testing L33T variants of the supplied password
+        /// </summary>
+        public bool TestL33tVariants { get; set; }
 
         /// <inheritdoc/>
         public bool TestAndScore(string password)

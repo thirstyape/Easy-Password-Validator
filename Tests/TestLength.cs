@@ -1,14 +1,12 @@
 ﻿using Easy_Password_Validator.Interfaces;
 using Easy_Password_Validator.Properties;
 
-using System.Collections.Generic;
-
 namespace Easy_Password_Validator.Tests
 {
-    /// <summary>
-    /// Checks to see whether a password meets the minimum string length requirements
-    /// </summary>
-    public class TestLength : IPasswordTest
+	/// <summary>
+	/// Checks to see whether a password meets the minimum string length requirements
+	/// </summary>
+	public class TestLength : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -27,9 +25,6 @@ namespace Easy_Password_Validator.Tests
 
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> BadList { get; set; }
 
         /// <inheritdoc/>
         public bool TestAndScore(string password)
