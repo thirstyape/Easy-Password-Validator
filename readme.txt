@@ -5,11 +5,12 @@ If this behavior is not desired they can be copied into your project in the foll
 
 Download https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt and copy to
 \ProjectBuildDirectory\BadLists\top-10k-passwords.txt
+- or -
+%localappdata%\Easy-Password-Validator\BadLists\top-10k-passwords.txt
 
 Download https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt and copy to
-\ProjectBuildDirectory\BadLists\top-100k-passwords.txt
+\ProjectBuildDirectory\BadLists\top-100k-passwords.txt 
+- or -
+%localappdata%\Easy-Password-Validator\BadLists\top-100k-passwords.txt
 
 As long as the output directory of your project has a BadLists\ subfolder containing the two files listed above they will run from the local copy.
-
-Keep in mind that this only works for applications with file system access. For example, WebAssembly applications will not be able to use the lists at all.
-In this event you can still supply your own lists by adding a custom test.

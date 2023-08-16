@@ -85,6 +85,25 @@ public class MyCustomController : ControllerBase {
 }
 ```
 
+**Usage in Blazor WebAssembly**
+
+Since Blazor WebAssembly is not able to use asynchronous code in a synchronous manner, an extra step is required if use of the bad lists is desired. Note the call to ```.Initialize()```, this will perform the bad list loading with the ```await``` keyword.
+
+```
+Console.WriteLine("Enter a password to test:");
+var password = Console.ReadLine();
+
+var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
+await passwordValidator.Initialize();
+
+var pass = passwordValidator.TestAndScore(password);
+
+if (pass)
+    Console.WriteLine($"Password passed validation with score: {passwordValidator.Score}");
+else
+    Console.WriteLine($"Password failed validation with score: {passwordValidator.Score}");
+```
+
 **Using custom configuration**
 
 In the previous example, the call to ```new PasswordRequirements()``` was done inline in the service setup. However, it can be prepared beforehand and the validator will use different settings or you can create your own using ```IPasswordRequirements```.
