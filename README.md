@@ -242,7 +242,7 @@ If you do add support for a language that is not bundled here, please let me kno
 
 ## Authors
 
-* **Nathanael Frey**
+* **NF Software Inc.**
 
 ## License
 
