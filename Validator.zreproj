@@ -25,6 +25,11 @@
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="e26bcc49-2cce-4b90-8730-53c96bceaf30">
       <file filePath="Properties\Resources.resx" uniqueID="2ca567a3-5339-4184-95c7-4e0b71fa5e90" />
       <file filePath="Properties\Resources.de.resx" uniqueID="e3a32fbe-94c5-4c67-b31d-04eac3fb5952" />
+      <file filePath="Properties\Resources.en-CA.resx" uniqueID="E4715924-2C88-48D2-8D52-2B77449BF69F" />
+      <file filePath="Properties\Resources.en-US.resx" uniqueID="B72CE152-CED3-4C79-BEEC-99004B2F2385" />
+      <file filePath="Properties\Resources.fr.resx" uniqueID="76723209-A5ED-4912-B27C-39EEED6548FD" />
+      <file filePath="Properties\Resources.it.resx" uniqueID="1A09C8BF-C813-4282-A137-F27522733F57" />
+      <file filePath="Properties\Resources.ro.resx" uniqueID="759BBB6D-FA4F-45F2-B3C4-CFBEC4008287" />
       <remarks>
       </remarks>
     </fileGroup>

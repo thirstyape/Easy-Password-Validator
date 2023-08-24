@@ -216,8 +216,11 @@ The run order for l33t replacements has been laid out as follows, and you may se
 
 Error messages are provided using .RESX files and are currently available in the following languages:
 
-* English
-* German
+* English (en, en-CA, en-US)
+* French (fr)
+* German (de)
+* Italian (it)
+* Romanian (ro)
 
 By default error messages will be returned based on the language of the operating system (defaults to English if specified language is not available). To choose a specific language enter the language code in the ```.TestAndScore()``` method. Language codes are either 2 or 5 characters in length (ex. en, en-US, de, de-DE).
 
@@ -235,7 +238,7 @@ var pass = passwordValidator.TestAndScore(password, new string[] { username }, "
 
 To add another language you must use the Git repository, the NuGet package does not support adding languages. To do so add a .RESX file with the proper language code and update the ```.CheckValidLanguage()``` method in ```PasswordValidatorService.cs```. To simplify the creation of the .RESX files you can use [Zeta Resource Editor](https://www.zeta-resource-editor.com/index.html) with the .zeproj file included in the repository.
 
-If you do add support for a language that is not bundled here please let me know or fork the repository so I can update the master branch (looking for high-quality translations only, i.e. no copy paste from translation services).
+If you do add support for a language that is not bundled here, please let me know or fork the repository so I can update the master branch and NuGet package. Looking for high-quality translations only, i.e. no copy paste from translation services.
 
 ## Authors
 

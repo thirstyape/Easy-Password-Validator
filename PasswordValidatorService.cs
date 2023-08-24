@@ -26,6 +26,7 @@ namespace Easy_Password_Validator
 
 		private IEnumerable<L33tReplacement> CustomReplacements;
 		private readonly string BadListDirectory;
+		private readonly bool LoadRemoteBadLists;
 
 		private const string Remote10k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-10k-passwords.txt";
 		private const string Remote100k = "https://raw.githubusercontent.com/thirstyape/Easy-Password-Validator/master/BadLists/top-100k-passwords.txt";
@@ -37,14 +38,16 @@ namespace Easy_Password_Validator
 		/// </summary>
 		/// <param name="passwordRequirements">The parameters to analyse passwords with</param>
 		/// <param name="badListDirectory">A custom directory containing the Top 10K and Top 100K bad list files</param>
+		/// <param name="loadRemoteBadLists">Specifies whether to load bad lists over HTTP when missing</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null)
+		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null, bool loadRemoteBadLists = true)
 		{
-			// Configure class
-			Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
+            // Configure class
+            LoadRemoteBadLists = loadRemoteBadLists;
+            Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
 			FailureMessages = new List<string>();
 
-			if (string.IsNullOrWhiteSpace(badListDirectory) == false)
+            if (string.IsNullOrWhiteSpace(badListDirectory) == false)
 				BadListDirectory = badListDirectory;
 			else if (string.IsNullOrWhiteSpace(InstallDirectory) == false)
 				BadListDirectory = Path.Combine(InstallDirectory, "BadLists");
@@ -206,8 +209,8 @@ namespace Easy_Password_Validator
 			if (RuntimeInformation.OSDescription.Equals("Browser", StringComparison.OrdinalIgnoreCase) == false)
 				return;
 
-			// Load temp copy
-			try
+            // Load temp copy
+            try
 			{
 				using (var client = new HttpClient())
 				{
@@ -323,6 +326,9 @@ namespace Easy_Password_Validator
 			string temp10k = null;
 			string temp100k = null;
 
+			if (LoadRemoteBadLists == false)
+				return;
+
 			try
 			{
 				using (var client = new HttpClient())
@@ -399,6 +405,9 @@ namespace Easy_Password_Validator
 				{
 					case "de":
 					case "en":
+					case "fr":
+					case "it":
+					case "ro":
 						return true;
 					default:
 						return false;
