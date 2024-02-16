@@ -37,7 +37,7 @@ To use this library either clone a copy of the repository or check out the [NuGe
 
 The following example provides a complete use case. This example makes use of the most basic configuration.
 
-```
+```csharp
 Console.WriteLine("Enter a username:");
 var username = Console.ReadLine();
 
@@ -64,7 +64,7 @@ The following example displays how to register the ```PasswordValidatorService``
 
 Modify Startup.cs as follows:
 
-```
+```csharp
 public void ConfigureServices(IServiceCollection services) {
     // Your other startup items
 
@@ -75,7 +75,7 @@ public void ConfigureServices(IServiceCollection services) {
 
 Once that has been done you can simply pull a copy into your controllers as follows:
 
-```
+```csharp
 public class MyCustomController : ControllerBase {
     private readonly PasswordValidatorService PasswordValidator;
 
@@ -89,7 +89,7 @@ public class MyCustomController : ControllerBase {
 
 Since Blazor WebAssembly is not able to use asynchronous code in a synchronous manner, an extra step is required if use of the bad lists is desired. Note the call to ```.Initialize()```, this will perform the bad list loading with the ```await``` keyword.
 
-```
+```csharp
 Console.WriteLine("Enter a password to test:");
 var password = Console.ReadLine();
 
@@ -108,7 +108,7 @@ else
 
 In the previous example, the call to ```new PasswordRequirements()``` was done inline in the service setup. However, it can be prepared beforehand and the validator will use different settings or you can create your own using ```IPasswordRequirements```.
 
-```
+```csharp
 var requirements = new PasswordRequirements()
 {
     MinLength = 4,
@@ -126,7 +126,7 @@ The system also supports adding your own password tests that will run with the b
 
 The sample tester class.
 
-```
+```csharp
 private class TestWhiteSpace : IPasswordTest
 {
     public int ScoreModifier { get; set; }
@@ -159,7 +159,7 @@ private class TestWhiteSpace : IPasswordTest
 
 Adding to validator service.
 
-```
+```csharp
 var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
 
 passwordValidator.AddTest(new TestWhiteSpace());
@@ -169,7 +169,7 @@ passwordValidator.AddTest(new TestWhiteSpace());
 
 The pattern matcher checks for Qwerty keyboard patterns by default. You may add another instance of the pattern matcher with your own custom patterns (for example alphabetical order checking).
 
-```
+```csharp
 var requirements = new PasswordRequirements();
 var passwordValidator = new PasswordValidatorService(requirements);
 
@@ -190,7 +190,7 @@ passwordValidator.AddTest(test);
 
 If desired, a custom l33t decoding dictionary may be used, or you may extend or modify the built in dictionary.
 
-```
+```csharp
 var passwordValidator = new PasswordValidatorService(new PasswordRequirements());
 var l33TReplacements = L33tDecoderService.GetReplacements(L33tLevel.Advanced).ToList();
 
@@ -224,7 +224,7 @@ Error messages are provided using .RESX files and are currently available in the
 
 By default error messages will be returned based on the language of the operating system (defaults to English if specified language is not available). To choose a specific language enter the language code in the ```.TestAndScore()``` method. Language codes are either 2 or 5 characters in length (ex. en, en-US, de, de-DE).
 
-```
+```csharp
 Console.WriteLine("Enter a username:");
 var username = Console.ReadLine();
 
