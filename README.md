@@ -12,7 +12,7 @@ The default implementation will check for the following:
 * Contains digits
 * Contains uppercase letters
 * Contains lowercase letters
-* Contains punctuation marks
+* Contains punctuation marks or symbols
 * Checks password length
 * Checks number of unique characters
 * Checks for QWERTY, QWERTZ, or AZERTY keyboard patterns (ex. asDFr$)

@@ -65,6 +65,8 @@ namespace Easy_Password_Validator.Tests
                 PatternMap = PatternMapService.QwertzMap;
             else if (Settings.KeyboardStyle == PatternMapTypes.Azerty)
                 PatternMap = PatternMapService.AzertyMap;
+            else if (Settings.KeyboardStyle == PatternMapTypes.NumPad)
+                PatternMap = PatternMapService.NumPadMap;
 
             // Do work
             var patterns = PatternMapService.GetPatterns(password, PatternMap);

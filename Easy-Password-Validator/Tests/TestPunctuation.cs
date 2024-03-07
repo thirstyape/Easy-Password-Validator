@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-	/// <summary>
-	/// Checks to see whether the password contains any punctuation marks
-	/// </summary>
-	public class TestPunctuation : IPasswordTest
+    /// <summary>
+    /// Checks to see whether the password contains any punctuation marks or symbols
+    /// </summary>
+    public class TestPunctuation : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -39,7 +39,7 @@ namespace Easy_Password_Validator.Tests
                 return true;
 
             // Check for punctuation
-            var punctuations = password.Count(char.IsPunctuation);
+            var punctuations = password.Count(x => char.IsPunctuation(x) || char.IsSymbol(x));
 
             // Adjust score
             ScoreModifier = punctuations * 5;

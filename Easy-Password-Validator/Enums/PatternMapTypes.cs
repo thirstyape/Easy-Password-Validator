@@ -21,6 +21,11 @@
         Azerty,
 
         /// <summary>
+        /// A layout for only the number pad
+        /// </summary>
+        NumPad,
+
+        /// <summary>
         /// The keyboard uses a different layout
         /// </summary>
         Custom

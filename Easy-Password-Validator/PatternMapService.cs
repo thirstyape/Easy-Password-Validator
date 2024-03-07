@@ -302,5 +302,27 @@ namespace Easy_Password_Validator
 
             new PatternMapItem() { RegularKey = ' ', ShiftKey = ' ', NeighborKeys = new char[] { 'w', 'x', 'c', 'v', 'b', 'n', ',', 'W', 'X', 'C', 'V', 'B', 'N', '?' } }
         };
+
+        /// <summary>
+        /// The default NumPad keyboard pattern map
+        /// </summary>
+        public static readonly List<PatternMapItem> NumPadMap = new List<PatternMapItem>() 
+        {
+            new PatternMapItem() { RegularKey = '/', ShiftKey = '/', NeighborKeys = new char[] { '*', '8' } },
+            new PatternMapItem() { RegularKey = '*', ShiftKey = '*', NeighborKeys = new char[] { '/', '-', '9' } },
+            new PatternMapItem() { RegularKey = '-', ShiftKey = '-', NeighborKeys = new char[] { '*', '+' } },
+            new PatternMapItem() { RegularKey = '1', ShiftKey = '1', NeighborKeys = new char[] { '4', '2', '0' } },
+            new PatternMapItem() { RegularKey = '2', ShiftKey = '2', NeighborKeys = new char[] { '5', '1', '3', '0' } },
+            new PatternMapItem() { RegularKey = '3', ShiftKey = '3', NeighborKeys = new char[] { '6', '2', '.' } },
+            new PatternMapItem() { RegularKey = '4', ShiftKey = '4', NeighborKeys = new char[] { '7', '5', '1' } },
+            new PatternMapItem() { RegularKey = '5', ShiftKey = '5', NeighborKeys = new char[] { '8', '4', '6', '2' } },
+            new PatternMapItem() { RegularKey = '6', ShiftKey = '6', NeighborKeys = new char[] { '9', '5', '+', '3' } },
+            new PatternMapItem() { RegularKey = '7', ShiftKey = '7', NeighborKeys = new char[] { '8', '4' } },
+            new PatternMapItem() { RegularKey = '8', ShiftKey = '8', NeighborKeys = new char[] { '/', '7', '9', '5' } },
+            new PatternMapItem() { RegularKey = '9', ShiftKey = '9', NeighborKeys = new char[] { '*', '8', '+', '6' } },
+            new PatternMapItem() { RegularKey = '0', ShiftKey = '0', NeighborKeys = new char[] { '1', '2', '.' } },
+            new PatternMapItem() { RegularKey = '+', ShiftKey = '+', NeighborKeys = new char[] { '-', '9', '6' } },
+            new PatternMapItem() { RegularKey = '.', ShiftKey = '.', NeighborKeys = new char[] { '0', '3' } }
+        };
     }
 }
