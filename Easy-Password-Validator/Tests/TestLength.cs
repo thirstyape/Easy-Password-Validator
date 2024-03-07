@@ -33,6 +33,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseLength == false)
+                return true;
+
             // Adjust score
             ScoreModifier = password.Length * 5;
 

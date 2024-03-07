@@ -34,6 +34,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UsePunctuation == false)
+                return true;
+
             // Check for punctuation
             var punctuations = password.Count(char.IsPunctuation);
 

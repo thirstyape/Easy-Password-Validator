@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-	/// <summary>
-	/// Checks to see whether a password meets the maximum consecutive characters requirements
-	/// </summary>
-	public class TestRepeat : IPasswordTest
+    /// <summary>
+    /// Checks to see whether a password meets the maximum consecutive characters requirements
+    /// </summary>
+    public class TestRepeat : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -38,8 +38,12 @@ namespace Easy_Password_Validator.Tests
             ScoreModifier = 0;
 
             // Check for inactive
-            if (Settings.MaxRepeatSameCharacter < 1)
+            if (Settings.UseRepeat == false)
                 return true;
+
+            // Check for invalid
+            if (Settings.MaxRepeatSameCharacter < 1)
+                return false;
 
             // Group consecutive letters
             var repeats = new List<string>();

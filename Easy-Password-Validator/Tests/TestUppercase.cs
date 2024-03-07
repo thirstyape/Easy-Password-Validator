@@ -34,6 +34,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseUppercase == false)
+                return true;
+
             // Check for uppercase
             var uppercases = password.Count(char.IsUpper);
 

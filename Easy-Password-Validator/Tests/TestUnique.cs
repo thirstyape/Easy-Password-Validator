@@ -34,6 +34,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseUnique == false)
+                return true;
+
             // Count unique chars
             var unique = password.GroupBy(x => x).Count();
 

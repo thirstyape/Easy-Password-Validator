@@ -34,6 +34,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseDigit == false)
+                return true;
+
             // Check for digits
             var digits = password.Count(char.IsDigit);
 

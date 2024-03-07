@@ -15,13 +15,24 @@ The default implementation will check for the following:
 * Contains punctuation marks
 * Checks password length
 * Checks number of unique characters
-* Checks for Qwerty keyboard patterns (ex. asDFr$)
+* Checks for QWERTY, QWERTZ, or AZERTY keyboard patterns (ex. asDFr$)
 * Checks for repeat characters (ex. tttttt)
 * Checks password entropy (disabled by default)
 * Checks if password is in top 100,000 bad password list
 * Checks if decoded l33t versions of password are in top 10,000 bad password list
 
 These checks will result in a pass or fail value being returned based on the provided password requirements. The score is not altered by the requirements.
+
+## Breaking Changes V1.2
+
+**Notice!**
+
+When upgrading to version 1.2 or higher please check that the following are ready for the upgrade. Most likely you will be fine, but there are some specific cases that could cause problems.
+
+* `IPasswordRequirements` has new properties, if you are using a custom implementation you will need to add these
+* Setting `IPasswordRequirements.MaxNeighboringCharacter` to 0 no longer disables the `TestPattern` test; set `IPasswordRequirements.UsePattern` to false for this
+* Setting `IPasswordRequirements.MaxRepeatSameCharacter` to 0 no longer disables the `TestRepeat` test; set `IPasswordRequirements.UseRepeat` to false for this
+* Setting `IPasswordRequirements.MinEntropy` to 0 no longer disables the `TestEntropy` test and is considered invalid
 
 ## Getting Started
 
@@ -114,11 +125,15 @@ var requirements = new PasswordRequirements()
     MinLength = 4,
     ExitOnFailure = true,
     RequireDigit = true,
-    MinScore = 50
+    MinScore = 50,
+    UseEntropy = true,
+    UseDigit = false
 };
 
 var passwordValidator = new PasswordValidatorService(requirements);
 ```
+
+Note that disabling a test with a property such as `IPasswordRequirements.UseDigit` will prevent that test from failing and also will not provide any score modification. For that reason the recommended action is to leave the enablement settings as is.
 
 **Adding A Custom Tester**
 
@@ -132,7 +147,6 @@ private class TestWhiteSpace : IPasswordTest
     public int ScoreModifier { get; set; }
     public string FailureMessage { get; set; }
     public IPasswordRequirements Settings { get; set; }
-    public IEnumerable<string> BadList { get; set; }
 
     public bool TestAndScore(string password)
     {
@@ -167,7 +181,7 @@ passwordValidator.AddTest(new TestWhiteSpace());
 
 **Adding A Custom Pattern**
 
-The pattern matcher checks for Qwerty keyboard patterns by default. You may add another instance of the pattern matcher with your own custom patterns (for example alphabetical order checking).
+The pattern matcher checks for QWERTY keyboard patterns by default. You may add another instance of the pattern matcher with your own custom patterns (for example alphabetical order checking).
 
 ```csharp
 var requirements = new PasswordRequirements();
@@ -186,9 +200,11 @@ var test = new TestPattern(requirements, pattern);
 passwordValidator.AddTest(test);
 ```
 
+You can change the default instance of TestPattern to run its test based on QWERTZ, AZERTY, or custom layouts as well. To do so set the `IPasswordRequirements.KeyboardStyle` to the desired value. If you select custom you must provide your list as a parameter in the constructor for `PasswordValidatorService`.
+
 **Using A Custom L33T Dictionary**
 
-If desired, a custom l33t decoding dictionary may be used, or you may extend or modify the built in dictionary.
+If desired, a custom L33T decoding dictionary may be used, or you may extend or modify the built in dictionary.
 
 ```csharp
 var passwordValidator = new PasswordValidatorService(new PasswordRequirements());

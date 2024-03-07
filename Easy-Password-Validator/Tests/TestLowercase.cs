@@ -34,6 +34,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseLowercase == false)
+                return true;
+
             // Check for lowercase
             var lowercases = password.Count(char.IsLower);
 

@@ -71,6 +71,10 @@ namespace Easy_Password_Validator.Tests
             FailureMessage = null;
             ScoreModifier = 0;
 
+            // Check for inactive
+            if (Settings.UseBadList == false)
+                return true;
+
             // Check for match
             var match = BadList.Any(x => x.IndexOf(password, StringComparison.OrdinalIgnoreCase) >= 0);
 

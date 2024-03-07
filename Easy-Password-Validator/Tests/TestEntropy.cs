@@ -1,17 +1,15 @@
 ﻿using Easy_Password_Validator.Interfaces;
-using Easy_Password_Validator.Models;
 using Easy_Password_Validator.Properties;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Easy_Password_Validator.Tests
 {
-	/// <summary>
-	/// Checks to see whether a password meets the minimum entropy requirements
-	/// </summary>
-	public class TestEntropy : IPasswordTest
+    /// <summary>
+    /// Checks to see whether a password meets the minimum entropy requirements
+    /// </summary>
+    public class TestEntropy : IPasswordTest
     {
         /// <summary>
         /// Prepares test for use
@@ -32,9 +30,6 @@ namespace Easy_Password_Validator.Tests
         public IPasswordRequirements Settings { get; set; }
 
         /// <inheritdoc/>
-        public List<PatternMapItem> PatternMap { get; set; }
-
-        /// <inheritdoc/>
         public bool TestAndScore(string password)
         {
             // Reset
@@ -42,8 +37,12 @@ namespace Easy_Password_Validator.Tests
             ScoreModifier = 0;
 
             // Check for inactive
-            if (Settings.UseEntropy == false || Settings.MinEntropy == 0)
+            if (Settings.UseEntropy == false)
                 return true;
+
+            // Check for invalid
+            if (Settings.MinEntropy <= 0)
+                return false;
 
             // Do work
             var grouped = password.GroupBy(c => c).ToDictionary(c => c.Key, c => c.Count());

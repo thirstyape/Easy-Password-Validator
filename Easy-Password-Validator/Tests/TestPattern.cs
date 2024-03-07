@@ -1,4 +1,5 @@
-﻿using Easy_Password_Validator.Interfaces;
+﻿using Easy_Password_Validator.Enums;
+using Easy_Password_Validator.Interfaces;
 using Easy_Password_Validator.Models;
 using Easy_Password_Validator.Properties;
 
@@ -18,11 +19,14 @@ namespace Easy_Password_Validator.Tests
         /// </summary>
         /// <param name="passwordRequirements">Object containing current settings</param>
         /// <param name="map">An optional custom pattern mapping to check</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public TestPattern(IPasswordRequirements passwordRequirements, List<PatternMapItem> map = null)
         {
             Settings = passwordRequirements;
+            PatternMap = map;
 
-            PatternMap = map ?? PatternMapService.QwertyMap;
+            if (Settings.KeyboardStyle == PatternMapTypes.Custom && map == null)
+                throw new ArgumentNullException(nameof(map), "Must provide pattern mapping list when using custom layout");
         }
 
         /// <inheritdoc/>
@@ -34,7 +38,9 @@ namespace Easy_Password_Validator.Tests
         /// <inheritdoc/>
         public IPasswordRequirements Settings { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Contains the patterns to check for
+        /// </summary>
         public List<PatternMapItem> PatternMap { get; set; }
 
         /// <inheritdoc/>
@@ -45,8 +51,20 @@ namespace Easy_Password_Validator.Tests
             ScoreModifier = 0;
 
             // Check for inactive
-            if (Settings.MaxNeighboringCharacter < 1)
+            if (Settings.UsePattern == false)
                 return true;
+
+            // Check for invalid
+            if (Settings.MaxNeighboringCharacter < 1)
+                return false;
+
+            // Update map
+            if (Settings.KeyboardStyle == PatternMapTypes.Qwerty)
+                PatternMap = PatternMapService.QwertyMap;
+            else if (Settings.KeyboardStyle == PatternMapTypes.Qwertz)
+                PatternMap = PatternMapService.QwertzMap;
+            else if (Settings.KeyboardStyle == PatternMapTypes.Azerty)
+                PatternMap = PatternMapService.AzertyMap;
 
             // Do work
             var patterns = PatternMapService.GetPatterns(password, PatternMap);

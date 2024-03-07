@@ -1,4 +1,5 @@
-﻿using Easy_Password_Validator.Interfaces;
+﻿using Easy_Password_Validator.Enums;
+using Easy_Password_Validator.Interfaces;
 
 namespace Easy_Password_Validator.Models
 {
@@ -38,9 +39,39 @@ namespace Easy_Password_Validator.Models
         public float MinEntropy { get; set; } = 2.5F;
 
         /// <inheritdoc/>
+        public bool UseLength { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseDigit { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseLowercase { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseUppercase { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UsePattern { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UsePunctuation { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseRepeat { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseUnique { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool UseBadList { get; set; } = true;
+
+        /// <inheritdoc/>
         public bool UseEntropy { get; set; }
 
         /// <inheritdoc/>
         public bool ExitOnFailure { get; set; }
+
+        /// <inheritdoc/>
+        public PatternMapTypes KeyboardStyle { get; set; } = PatternMapTypes.Qwerty;
     }
 }

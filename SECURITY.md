@@ -6,8 +6,9 @@ The following is a listing of versions and their support status for security iss
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.1.x   | :white_check_mark: |
-| 1.0.x   | :white_check_mark: |
+| 1.2.x   | :white_check_mark: Fully supported |
+| 1.1.x   | :warning: Security updates only |
+| 1.0.x   | :no_entry: Not supported |
 
 ## Reporting a Vulnerability
 

@@ -39,8 +39,9 @@ namespace Easy_Password_Validator
 		/// <param name="passwordRequirements">The parameters to analyse passwords with</param>
 		/// <param name="badListDirectory">A custom directory containing the Top 10K and Top 100K bad list files</param>
 		/// <param name="loadRemoteBadLists">Specifies whether to load bad lists over HTTP when missing</param>
+		/// <param name="patternMap">A custom pattern map to use with the keyboard pattern test</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null, bool loadRemoteBadLists = true)
+		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null, bool loadRemoteBadLists = true, List<PatternMapItem> patternMap = null)
 		{
             // Configure class
             LoadRemoteBadLists = loadRemoteBadLists;
@@ -60,7 +61,7 @@ namespace Easy_Password_Validator
 				new TestLength(passwordRequirements),
 				new TestUnique(passwordRequirements),
 				new TestRepeat(passwordRequirements),
-				new TestPattern(passwordRequirements),
+				new TestPattern(passwordRequirements, patternMap),
 				new TestDigit(passwordRequirements),
 				new TestLowercase(passwordRequirements),
 				new TestUppercase(passwordRequirements),
