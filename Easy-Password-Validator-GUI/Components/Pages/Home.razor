@@ -2,3 +2,172 @@
 @inherits ComponentBase
 
 <TitleBlock Title="Easy Password Validator" />
+
+<EditForm Model="InputModel">
+    <div class="columns is-multiline p-2">
+        <div class="column is-12-tablet is-6-fullhd">
+	        <Panel Title="Password Requirements">
+                <div class="field is-grouped">
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Minimum Length</label>
+                        <InputNumber class="input" min="1" @bind-Value=Settings.MinLength @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MinLength" />
+                        </div>
+                    </div>
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Minimum Unique Characters</label>
+                        <InputNumber class="input" min="1" @bind-Value=Settings.MinUniqueCharacters @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MinUniqueCharacters" />
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Maximum Repeat Same Character</label>
+                        <InputNumber class="input" min="1" @bind-Value=Settings.MaxRepeatSameCharacter @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MaxRepeatSameCharacter" />
+                        </div>
+                    </div>
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Maximum Neighboring Character</label>
+                        <InputNumber class="input" min="1" @bind-Value=Settings.MaxNeighboringCharacter @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MaxNeighboringCharacter" />
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Character Types</label>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-RequireDigit' @bind-Value="Settings.RequireDigit" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-RequireDigit">Require Digit</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-RequireLowercase' @bind-Value="Settings.RequireLowercase" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-RequireLowercase">Require Lowercase</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-RequireUppercase' @bind-Value="Settings.RequireUppercase" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-RequireUppercase">Require Uppercase</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-RequirePunctuation' @bind-Value="Settings.RequirePunctuation" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-RequirePunctuation">Require Punctuation</label>
+                    </div>
+                </div>
+	        </Panel>
+        </div>
+        <div class="column is-12-tablet is-6-fullhd">
+            <Panel Title="Score Modifiers">
+                <div class="field is-grouped">
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Minimum Score</label>
+                        <InputNumber class="input" min="1" @bind-Value=Settings.MinScore @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MinScore" />
+                        </div>
+                    </div>
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Minimum Entropy</label>
+                        <InputNumber class="input" min="0" @bind-Value=Settings.MinEntropy @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">numbers</span>
+                        <div class="help is-danger">
+                            <ValidationMessage For="() => Settings.MinEntropy" />
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Keyboard Style</label>
+                    <div class="control has-icons-left is-expanded">
+                        <InputSelectEnum class="is-fullwidth" @bind-Value="Settings.KeyboardStyle" @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">list</span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Tests</label>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseLength' @bind-Value="Settings.UseLength" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseLength">Use Length</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseDigit' @bind-Value="Settings.UseDigit" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseDigit">Use Digit</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseLowercase' @bind-Value="Settings.UseLowercase" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseLowercase">Use Lowercase</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseUppercase' @bind-Value="Settings.UseUppercase" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseUppercase">Use Uppercase</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UsePattern' @bind-Value="Settings.UsePattern" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UsePattern">Use Pattern</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UsePunctuation' @bind-Value="Settings.UsePunctuation" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UsePunctuation">Use Punctuation</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseRepeat' @bind-Value="Settings.UseRepeat" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseRepeat">Use Repeat</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseUnique' @bind-Value="Settings.UseUnique" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseUnique">Use Unique</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseBadList' @bind-Value="Settings.UseBadList" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseBadList">Use Bad List</label>
+                    </div>
+                    <div class="box checkbox">
+                        <InputCheckbox class="switch" id='EPV-Settings-UseEntropy' @bind-Value="Settings.UseEntropy" @bind-Value:after='ValidatePassword' />
+                        <label class="no-select" for="EPV-Settings-UseEntropy">Use Entropy</label>
+                    </div>
+                </div>
+            </Panel>
+        </div>
+        <div class="column is-12">
+	        <Panel Title="Testing">
+                <div class="field is-grouped">
+                    <div class="control is-expanded has-icons-left">
+                        <label class="label">Password</label>
+                        <InputText class="input" type="password" @bind-Value=InputModel.CurrentPassword @bind-Value:after='ValidatePassword' />
+                        <span class="material-icons icon is-left">password</span>
+                        <ProgressBar class="@PasswordMeterCssClass" Max="(Settings.MinScore * 2)" Current="InputModel.CurrentScore" />
+                        <div class="help is-danger">
+                            @InputModel.PasswordFailedMessage
+                        </div>
+                    </div>
+                    <div class="control" style="min-width: 150px">
+                        <nav class="level" style="height: 100%">
+                            <div class="level-item has-text-centered">
+                                <div>
+                                    <p class="heading">Score</p>
+                                    <p class="@ScoreCssClass">@InputModel.CurrentScore</p>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-text-centered">
+                        <button type="button" class="button is-info" @onclick='ValidatePassword'>
+                            <span class="material-icons icon">refresh</span>
+                            <span>Update Score</span>
+                        </button>
+                    </div>
+                </div>
+	        </Panel>
+        </div>
+    </div>
+</EditForm>
