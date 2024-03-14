@@ -8,6 +8,44 @@ namespace Easy_Password_Validator.Models
     /// </summary>
     public class PasswordRequirements : IPasswordRequirements
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PasswordRequirements() { }
+
+        /// <summary>
+        /// Constructor to clone existing requirements
+        /// </summary>
+        /// <param name="requirements"></param>
+        public PasswordRequirements(IPasswordRequirements requirements)
+        {
+            MinLength = requirements.MinLength;
+            MinUniqueCharacters = requirements.MinUniqueCharacters;
+            MaxRepeatSameCharacter = requirements.MaxRepeatSameCharacter;
+            MaxNeighboringCharacter = requirements.MaxNeighboringCharacter;
+            MinScore = requirements.MinScore;
+            MinEntropy = requirements.MinEntropy;
+
+            RequireDigit = requirements.RequireDigit;
+            RequireLowercase = requirements.RequireLowercase;
+            RequireUppercase = requirements.RequireUppercase;
+            RequirePunctuation = requirements.RequirePunctuation;
+
+            ExitOnFailure = requirements.ExitOnFailure;
+            KeyboardStyle = requirements.KeyboardStyle;
+
+            UseLength = requirements.UseLength;
+            UseDigit = requirements.UseDigit;
+            UseLowercase = requirements.UseLowercase;
+            UseUppercase = requirements.UseUppercase;
+            UsePattern = requirements.UsePattern;
+            UsePunctuation = requirements.UsePunctuation;
+            UseRepeat = requirements.UseRepeat;
+            UseUnique = requirements.UseUnique;
+            UseBadList = requirements.UseBadList;
+            UseEntropy = requirements.UseEntropy;
+        }
+
         /// <inheritdoc/>
         public int MinLength { get; set; } = 8;
 

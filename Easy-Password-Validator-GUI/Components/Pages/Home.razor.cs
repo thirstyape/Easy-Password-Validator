@@ -1,6 +1,5 @@
 ﻿using easy_blazor_bulma;
 using Easy_Password_Validator;
-using Easy_Password_Validator.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Easy_Password_Validator_GUI.Components.Pages;
@@ -8,7 +7,7 @@ namespace Easy_Password_Validator_GUI.Components.Pages;
 public partial class Home : ComponentBase
 {
 	private readonly PageModel InputModel = new();
-	private readonly PasswordRequirements Settings = new();
+	private readonly AnnotatedPasswordRequirements Settings = new();
 	private PasswordValidatorService? PasswordValidator;
 
 	/// <inheritdoc/>
