@@ -10,6 +10,9 @@ public partial class Home : ComponentBase
 	private readonly AnnotatedPasswordRequirements Settings = new();
 	private PasswordValidatorService? PasswordValidator;
 
+	private readonly TooltipOptions TooltipTop = TooltipOptions.Top | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+	private readonly TooltipOptions TooltipRight = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+
 	/// <inheritdoc/>
 	protected override void OnInitialized()
 	{

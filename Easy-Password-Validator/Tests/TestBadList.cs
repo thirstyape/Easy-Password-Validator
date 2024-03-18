@@ -14,24 +14,54 @@ namespace Easy_Password_Validator.Tests
 	/// </summary>
 	public class TestBadList : IPasswordTest
     {
-		/// <summary>
-		/// Prepares test for use and accepts a list of bad passwords to check
-		/// </summary>
-		/// <param name="badList">The badlist to use</param>
-		/// <exception cref="ArgumentNullException"></exception>
+        /// <summary>
+        /// Prepares test for use and accepts a list of bad passwords to check
+        /// </summary>
+        /// <param name="badList">The badlist to use</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete("Class requires settings object, please provide in new constructor")]
 		public TestBadList(IEnumerable<string> badList)
 		{
             BadList = badList ?? throw new ArgumentNullException(nameof(badList), "Must provide bad list collection");
         }
 
-        /// <summary>
-        /// Reads a file containing bad passwords and loads them into the badlist
-        /// </summary>
-        /// <param name="fileName">The full filename containing the bad password list to use</param>
-        /// <exception cref="ArgumentException"></exception>
-        public TestBadList(string fileName)
+		/// <summary>
+		/// Reads a file containing bad passwords and loads them into the badlist
+		/// </summary>
+		/// <param name="fileName">The full filename containing the bad password list to use</param>
+		/// <exception cref="ArgumentException"></exception>
+		[Obsolete("Class requires settings object, please provide in new constructor")]
+		public TestBadList(string fileName)
         {
             if (File.Exists(fileName) == false)
+                throw new ArgumentException("Specified file does not exist", nameof(fileName));
+
+            BadList = File.ReadAllLines(fileName);
+        }
+
+		/// <summary>
+		/// Prepares test for use and accepts a list of bad passwords to check
+		/// </summary>
+		/// <param name="passwordRequirements">Object containing current settings</param>
+		/// <param name="badList">The badlist to use</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public TestBadList(IPasswordRequirements passwordRequirements, IEnumerable<string> badList)
+		{
+			Settings = passwordRequirements;
+			BadList = badList ?? throw new ArgumentNullException(nameof(badList), "Must provide bad list collection");
+        }
+
+		/// <summary>
+		/// Reads a file containing bad passwords and loads them into the badlist
+		/// </summary>
+		/// <param name="passwordRequirements">Object containing current settings</param>
+		/// <param name="fileName">The full filename containing the bad password list to use</param>
+		/// <exception cref="ArgumentException"></exception>
+		public TestBadList(IPasswordRequirements passwordRequirements, string fileName)
+        {
+			Settings = passwordRequirements;
+
+			if (File.Exists(fileName) == false)
                 throw new ArgumentException("Specified file does not exist", nameof(fileName));
 
             BadList = File.ReadAllLines(fileName);

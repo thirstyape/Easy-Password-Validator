@@ -43,12 +43,12 @@ namespace Easy_Password_Validator
 		/// <exception cref="ArgumentNullException"></exception>
 		public PasswordValidatorService(IPasswordRequirements passwordRequirements, string badListDirectory = null, bool loadRemoteBadLists = true, List<PatternMapItem> patternMap = null)
 		{
-            // Configure class
-            LoadRemoteBadLists = loadRemoteBadLists;
-            Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
+			// Configure class
+			LoadRemoteBadLists = loadRemoteBadLists;
+			Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
 			FailureMessages = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(badListDirectory) == false)
+			if (string.IsNullOrWhiteSpace(badListDirectory) == false)
 				BadListDirectory = badListDirectory;
 			else if (string.IsNullOrWhiteSpace(InstallDirectory) == false)
 				BadListDirectory = Path.Combine(InstallDirectory, "BadLists");
@@ -136,7 +136,7 @@ namespace Easy_Password_Validator
 				if (existing != null)
 					existing.BadList = userInformation;
 				else
-					BadListTests.Add(new TestBadList(userInformation) { ListType = BadListTypes.UserInformation, TestL33tVariants = true });
+					BadListTests.Add(new TestBadList(Settings, userInformation) { ListType = BadListTypes.UserInformation, TestL33tVariants = true });
 			}
 
 			RunBadListTests(password, false);
@@ -210,21 +210,21 @@ namespace Easy_Password_Validator
 			if (RuntimeInformation.OSDescription.Equals("Browser", StringComparison.OrdinalIgnoreCase) == false)
 				return;
 
-            // Load temp copy
-            try
+			// Load temp copy
+			try
 			{
 				using (var client = new HttpClient())
 				{
 					if (BadListTests.Any(x => x.ListType == BadListTypes.Top10K) == false)
 					{
 						var temp10k = await client.GetStringAsync(Remote10k);
-						BadListTests.Add(new TestBadList(temp10k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
+						BadListTests.Add(new TestBadList(Settings, temp10k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
 					}
 
 					if (BadListTests.Any(x => x.ListType == BadListTypes.Top100K) == false)
 					{
 						var temp100k = await client.GetStringAsync(Remote100k);
-						BadListTests.Add(new TestBadList(temp100k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top100K });
+						BadListTests.Add(new TestBadList(Settings, temp100k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top100K });
 					}
 				}
 			}
@@ -296,10 +296,10 @@ namespace Easy_Password_Validator
 			try
 			{
 				if (File.Exists(embedded10k))
-					BadListTests.Add(new TestBadList(embedded10k) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
+					BadListTests.Add(new TestBadList(Settings, embedded10k) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
 
 				if (File.Exists(embedded100k))
-					BadListTests.Add(new TestBadList(embedded100k) { ListType = BadListTypes.Top100K });
+					BadListTests.Add(new TestBadList(Settings, embedded100k) { ListType = BadListTypes.Top100K });
 
 				if (BadListTests.Count == 2)
 					return;
@@ -313,10 +313,10 @@ namespace Easy_Password_Validator
 			try
 			{
 				if (BadListTests.Any(x => x.ListType == BadListTypes.Top10K) == false && File.Exists(appdata10k))
-					BadListTests.Add(new TestBadList(appdata10k) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
+					BadListTests.Add(new TestBadList(Settings, appdata10k) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
 
 				if (BadListTests.Any(x => x.ListType == BadListTypes.Top100K) == false && File.Exists(appdata100k))
-					BadListTests.Add(new TestBadList(appdata100k) { ListType = BadListTypes.Top100K });
+					BadListTests.Add(new TestBadList(Settings, appdata100k) { ListType = BadListTypes.Top100K });
 
 				if (BadListTests.Count == 2)
 					return;
@@ -340,7 +340,7 @@ namespace Easy_Password_Validator
 						task.Wait();
 
 						temp10k = task.Result;
-						BadListTests.Add(new TestBadList(temp10k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
+						BadListTests.Add(new TestBadList(Settings, temp10k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top10K, TestL33tVariants = true });
 					}
 
 					if (BadListTests.Any(x => x.ListType == BadListTypes.Top100K) == false)
@@ -349,7 +349,7 @@ namespace Easy_Password_Validator
 						task.Wait();
 
 						temp100k = task.Result;
-						BadListTests.Add(new TestBadList(temp100k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top100K });
+						BadListTests.Add(new TestBadList(Settings, temp100k.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) { ListType = BadListTypes.Top100K });
 					}
 				}
 			}

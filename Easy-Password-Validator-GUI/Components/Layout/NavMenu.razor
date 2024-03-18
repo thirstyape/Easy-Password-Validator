@@ -1,31 +1,5 @@
-﻿<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-	<div class="navbar-brand no-select">
-		<NavLink href="" ActiveClass="is-active" class="navbar-item good-times" Match="NavLinkMatch.All">Easy Password Validator</NavLink>
-
-		<a role="button" class='@BurgerCssClass' aria-label="menu" aria-expanded="false" data-target="easy-password-validator-navigationmenu" @onclick="ToggleNavMenu">
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-		</a>
-
-	</div>
-
-	<div id="easy-password-validator-navigationmenu" class='@MenuCssClass'>
-		<div class="navbar-start">
-		</div>
-		<div class="navbar-end">
-			<ThemeSelector />
-		</div>
-	</div>
-</nav>
-
-@code {
-	private bool ShowMenu;
-	private string MenuCssClass => ShowMenu ? "navbar-menu no-select is-active" : "navbar-menu no-select";
-	private string BurgerCssClass => ShowMenu ? "navbar-burger is-active" : "navbar-burger";
-
-	private void ToggleNavMenu()
-	{
-		ShowMenu = !ShowMenu;
-	}
-}
+﻿<Navbar class="is-dark" DisplayText="Easy Password Validator">
+	<NavbarEnd>
+		<ThemeSelector />
+	</NavbarEnd>
+</Navbar>
