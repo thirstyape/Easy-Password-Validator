@@ -1,16 +1,11 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Easy_Password_Validator_GUI
-{
-	[Application]
-	public class MainApplication : MauiApplication
-	{
-		public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-			: base(handle, ownership)
-		{
-		}
+namespace Easy_Password_Validator_GUI;
 
-		protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
-	}
+[Application]
+public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : MauiApplication(handle, ownership)
+{
+    /// <inheritdoc />
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
