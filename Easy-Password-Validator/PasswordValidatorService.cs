@@ -173,6 +173,23 @@ namespace Easy_Password_Validator
 		}
 
         /// <summary>
+        /// Adds a custom password test to the list of tests that will be run against provided passwords
+        /// </summary>
+        /// <param name="test">The test to add</param>
+        public void PrependTest(IPasswordTest test)
+        {
+            if (test == null)
+                return;
+
+            test.Settings = Settings;
+
+            if (test is TestBadList badList)
+                BadListTests.Insert(0, badList);
+            else
+                PasswordTests.Insert(0, test);
+        }
+
+        /// <summary>
         /// Updates the password requirements to use in each test
         /// </summary>
         /// <param name="passwordRequirements">The parameters to analyse passwords with</param>
