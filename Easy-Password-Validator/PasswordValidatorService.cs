@@ -172,12 +172,12 @@ namespace Easy_Password_Validator
 				PasswordTests.Add(test);
 		}
 
-		/// <summary>
-		/// Updates the password requirements to use in each test
-		/// </summary>
-		/// <param name="passwordRequirements">The parameters to analyse passwords with</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		public void UpdatePasswordRequirements(IPasswordRequirements passwordRequirements)
+        /// <summary>
+        /// Updates the password requirements to use in each test
+        /// </summary>
+        /// <param name="passwordRequirements">The parameters to analyse passwords with</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void UpdatePasswordRequirements(IPasswordRequirements passwordRequirements)
 		{
 			Settings = passwordRequirements ?? throw new ArgumentNullException(nameof(passwordRequirements), "Must provide password requirements object");
 
