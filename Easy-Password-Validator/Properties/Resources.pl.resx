@@ -133,7 +133,7 @@
     <value>Hasło musi zwierać przynajmniej jedną małą literę.</value>
   </data>
   <data name="FailedPattern" xml:space="preserve">
-    <value>Hasło może zawierać maksymalnie {0} znaków występujących obok siebie na klawiaturze.</value>
+    <value>Hasło może zawierać maksymalnie {0} znaki występujących obok siebie na klawiaturze.</value>
   </data>
   <data name="FailedPunctuation" xml:space="preserve">
     <value>Hasło musi zawierać przynajmniej jeden znak specjalny.</value>

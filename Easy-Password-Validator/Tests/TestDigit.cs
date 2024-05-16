@@ -8,49 +8,49 @@ namespace Easy_Password_Validator.Tests
 	/// Checks to see whether the password contains any digits
 	/// </summary>
 	public class TestDigit : IPasswordTest
-    {
-        /// <summary>
-        /// Prepares test for use
-        /// </summary>
-        /// <param name="passwordRequirements">Object containing current settings</param>
-        public TestDigit(IPasswordRequirements passwordRequirements)
-        {
-            Settings = passwordRequirements;
-        }
+	{
+		/// <summary>
+		/// Prepares test for use
+		/// </summary>
+		/// <param name="passwordRequirements">Object containing current settings</param>
+		public TestDigit(IPasswordRequirements passwordRequirements)
+		{
+			Settings = passwordRequirements;
+		}
 
-        /// <inheritdoc/>
-        public int ScoreModifier { get; set; }
+		/// <inheritdoc/>
+		public int ScoreModifier { get; set; }
 
-        /// <inheritdoc/>
-        public string FailureMessage { get; set; }
+		/// <inheritdoc/>
+		public string FailureMessage { get; set; }
 
-        /// <inheritdoc/>
-        public IPasswordRequirements Settings { get; set; }
+		/// <inheritdoc/>
+		public IPasswordRequirements Settings { get; set; }
 
-        /// <inheritdoc/>
-        public bool TestAndScore(string password)
-        {
-            // Reset
-            FailureMessage = null;
-            ScoreModifier = 0;
+		/// <inheritdoc/>
+		public bool TestAndScore(string password)
+		{
+			// Reset
+			FailureMessage = null;
+			ScoreModifier = 0;
 
-            // Check for inactive
-            if (Settings.UseDigit == false)
-                return true;
+			// Check for inactive
+			if (Settings.UseDigit == false)
+				return true;
 
-            // Check for digits
-            var digits = password.Count(char.IsDigit);
+			// Check for digits
+			var digits = password.Count(char.IsDigit);
 
-            // Adjust score
-            ScoreModifier = digits * 3;
+			// Adjust score
+			ScoreModifier = digits * 3;
 
-            // Return result
-            var pass = Settings.RequireDigit == false || digits > 0;
+			// Return result
+			var pass = Settings.RequireDigit == false || digits > 0;
 
-            if (pass == false)
-                FailureMessage = Resources.FailedDigit;
+			if (pass == false)
+				FailureMessage = Resources.FailedDigit;
 
-            return pass;
-        }
-    }
+			return pass;
+		}
+	}
 }
