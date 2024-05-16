@@ -121,30 +121,30 @@
     <value>Hasło znajduje się na liście znanych lub wykradzionych haseł.</value>
   </data>
   <data name="FailedDigit" xml:space="preserve">
-    <value>Hasło musi zawierać przynajmniej jedną cyfrę.</value>
+    <value>Hasło powinno zawierać przynajmniej jedną cyfrę.</value>
   </data>
   <data name="FailedEntropy" xml:space="preserve">
-    <value>Hasło musi posiadać entropię na poziomie przynajmniej {0}.</value>
+    <value>Hasło powinno posiadać entropię na poziomie przynajmniej {0}.</value>
   </data>
   <data name="FailedLength" xml:space="preserve">
-    <value>Hasło musi składać się przynajmniej z {0} znaków.</value>
+    <value>Hasło powinno składać się przynajmniej z {0} znaków.</value>
   </data>
   <data name="FailedLowercase" xml:space="preserve">
-    <value>Hasło musi zwierać przynajmniej jedną małą literę.</value>
+    <value>Hasło powinno zwierać przynajmniej jedną małą literę.</value>
   </data>
   <data name="FailedPattern" xml:space="preserve">
-    <value>Hasło może zawierać maksymalnie {0} znaki występujących obok siebie na klawiaturze.</value>
+    <value>Hasło powinno zawierać maksymalnie {0} znaki występujących obok siebie na klawiaturze.</value>
   </data>
   <data name="FailedPunctuation" xml:space="preserve">
-    <value>Hasło musi zawierać przynajmniej jeden znak specjalny.</value>
+    <value>Hasło powinno zawierać przynajmniej jeden znak specjalny.</value>
   </data>
   <data name="FailedRepeat" xml:space="preserve">
-    <value>Hasło może zawierać maksymalanie {0} powtórzonych po sobie znaków.</value>
+    <value>Hasło powinno zawierać maksymalanie {0} powtórzonych po sobie znaków.</value>
   </data>
   <data name="FailedUnique" xml:space="preserve">
-    <value>Hasło musi zawierać przynajmniej {0} unikalnych znaków.</value>
+    <value>Hasło powinno zawierać przynajmniej {0} unikalnych znaków.</value>
   </data>
   <data name="FailedUppercase" xml:space="preserve">
-    <value>Hasło musi zwierać przynajmniej jedną dużą literę.</value>
+    <value>Hasło powinno zwierać przynajmniej jedną dużą literę.</value>
   </data>
 </root>
