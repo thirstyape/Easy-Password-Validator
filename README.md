@@ -237,6 +237,7 @@ Error messages are provided using .RESX files and are currently available in the
 * German (de)
 * Italian (it)
 * Romanian (ro)
+* Polish (pl)
 
 By default error messages will be returned based on the language of the operating system (defaults to English if specified language is not available). To choose a specific language enter the language code in the ```.TestAndScore()``` method. Language codes are either 2 or 5 characters in length (ex. en, en-US, de, de-DE).
 
