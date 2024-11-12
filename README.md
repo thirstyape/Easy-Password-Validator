@@ -44,7 +44,7 @@ To use this library:
 
 * Clone a copy of the repository
 * Reference the [NuGet package](https://www.nuget.org/packages/Easy.Password.Validator/)
-* Try it on Android with the APK file (see releases)
+* Try it on Android with the [Google Play Store App](https://play.google.com/store/apps/details?id=com.nf_software_inc.easy_password_validator_gui) or APK file (see releases)
 * Try it on Windows with the [Microsoft Store App](https://apps.microsoft.com/detail/9p0blcxpjxf2) or MSIX package (see releases)
 
 ### Usage
